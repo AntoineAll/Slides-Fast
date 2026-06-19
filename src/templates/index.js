@@ -1,7 +1,9 @@
 import { TitreImageVisual, TitreImageForm } from './TitreImageTemplate';
 import { TitreTexteVisual, TitreTexteForm } from './TitreTexteTemplate';
+import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm } from './DiagrammeCirculaireTemplate';
+import { ComparatifVisual, ComparatifForm } from './ComparatifTemplate';
+import { TimelineVisual, TimelineForm } from './TimelineTemplate';
 
-// Registre central des templates avec leurs métadonnées, composants visuels et formulaires
 export const templates = {
   titre_image: {
     id: 'titre_image',
@@ -15,6 +17,24 @@ export const templates = {
     Visual: TitreTexteVisual,
     Form: TitreTexteForm,
   },
+  diagramme_circulaire: {
+    id: 'diagramme_circulaire',
+    name: 'Diagramme Circulaire',
+    Visual: DiagrammeCirculaireVisual,
+    Form: DiagrammeCirculaireForm,
+  },
+  comparatif: {
+    id: 'comparatif',
+    name: 'Comparatif (Avantages / Inconvénients)',
+    Visual: ComparatifVisual,
+    Form: ComparatifForm,
+  },
+  timeline: {
+    id: 'timeline',
+    name: 'Timeline (Roadmap / Étapes)',
+    Visual: TimelineVisual,
+    Form: TimelineForm,
+  },
 };
-// Liste pour un sélecteur de template si l'utilisateur doit changer de modèle depuis l'éditeur
+
 export const templateList = Object.values(templates);
