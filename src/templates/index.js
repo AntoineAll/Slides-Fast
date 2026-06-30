@@ -3,6 +3,7 @@ import { TitreTexteVisual, TitreTexteForm } from './TitreTexteTemplate';
 import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm } from './DiagrammeCirculaireTemplate';
 import { ComparatifVisual, ComparatifForm } from './ComparatifTemplate';
 import { TimelineVisual, TimelineForm } from './TimelineTemplate';
+import { PiliersVisual, PiliersForm } from './PiliersTemplate';
 
 export const templates = {
   titre_image: {
@@ -25,15 +26,21 @@ export const templates = {
   },
   comparatif: {
     id: 'comparatif',
-    name: 'Comparatif (Avantages / Inconvénients)',
+    name: 'Comparatif Pros/Cons',
     Visual: ComparatifVisual,
     Form: ComparatifForm,
   },
   timeline: {
     id: 'timeline',
-    name: 'Timeline (Roadmap / Étapes)',
+    name: 'Timeline / Roadmap',
     Visual: TimelineVisual,
     Form: TimelineForm,
+  },
+  piliers: { 
+    id: 'piliers',
+    name: '3 Piliers / Valeurs',
+    Visual: PiliersVisual,
+    Form: PiliersForm,
   },
 };
 

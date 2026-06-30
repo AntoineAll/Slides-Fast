@@ -24,9 +24,9 @@ export const Editor = () => {
     });
   };
 
-  // Gestionnaires de zoom
-  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.1, 2.5)); 
-  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 0.1, 0.2)); 
+  // Gestionnaires de zoom élargis pour plus de confort
+  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.1, 1.6)); 
+  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 0.1, 0.9)); 
   const handleResetZoom = () => setZoomLevel(1);
 
   // Récupération du template actif depuis le registre centralisé
@@ -104,8 +104,8 @@ export const Editor = () => {
             </div>
           </div>
         ) : (
-          /* VUE VISUEL */
-          <div className="flex-1 flex flex-col relative overflow-hidden bg-gray-950 rounded-2xl border border-gray-700/50 shadow-inner">
+          /* VUE VISUEL (Conteneur fixe 16:9 sans scrollbar parasite) */
+          <div className="flex-1 flex flex-col relative overflow-hidden bg-gray-950 rounded-2xl border border-gray-700/50 shadow-inner justify-center items-center">
             
             {/* Contrôles de zoom */}
             <div className="absolute top-4 right-4 bg-gray-900/90 border border-gray-700/80 p-2 rounded-xl flex items-center gap-1.5 shadow-xl z-10 backdrop-blur-sm">
@@ -132,22 +132,18 @@ export const Editor = () => {
               </button>
             </div>
 
-            {/* ZONE DE SCROLL */}
-            <div className="flex-1 w-full h-full overflow-auto flex items-center justify-center p-6">
-              
-              {/* Rendu dynamique du template visuel avec application du zoom */}
-              <div
-                style={{ transform: `scale(${zoomLevel})` }}
-                className="origin-center transition-transform duration-200 ease-out flex-shrink-0"
-              >
-                {ActiveTemplateVisual ? (
-                  <ActiveTemplateVisual content={activeSlide.content} />
-                ) : (
-                  <div className="w-[850px] aspect-video bg-gray-900 rounded-2xl border-2 border-gray-700 shadow-2xl flex items-center justify-center text-gray-500">
-                    Modèle visuel non reconnu
-                  </div>
-                )}
-              </div>
+            {/* Zone d'affichage de la diapositive avec contraintes 16:9 strictes */}
+            <div
+              style={{ transform: `scale(${zoomLevel})` }}
+              className="origin-center transition-transform duration-200 ease-out flex-shrink-0 flex items-center justify-center w-[850px] h-[478px]"
+            >
+              {ActiveTemplateVisual ? (
+                <ActiveTemplateVisual content={activeSlide.content} />
+              ) : (
+                <div className="w-[850px] h-[478px] bg-gray-900 rounded-2xl border-2 border-gray-700 shadow-2xl flex items-center justify-center text-gray-500">
+                  Modèle visuel non reconnu
+                </div>
+              )}
             </div>
           </div>
         )}

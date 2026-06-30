@@ -67,7 +67,7 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
 
         {/* Légende (à droite) */}
         <div className="w-[300px] bg-gray-950/40 border border-gray-800 p-4 rounded-xl max-h-[280px] overflow-y-auto space-y-3">
-          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+          <h4 className="text-xs font-semibold text-white-400 uppercase tracking-wider mb-2">
             Répartition :
           </h4>
           {parts.length > 0 ? (
@@ -87,11 +87,11 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
                       className="w-3.5 h-3.5 rounded-full flex-shrink-0" 
                       style={{ backgroundColor: part.couleur || '#3B82F6' }}
                     />
-                    <span className="text-gray-300 font-medium truncate" title={part.label || `Part ${index + 1}`}>
+                    <span className="text-white-300 font-medium truncate" title={part.label || `Part ${index + 1}`}>
                       {part.label || `Part ${index + 1}`}
                     </span>
                   </div>
-                  <span className="text-gray-400 font-mono text-xs">
+                  <span className="text-white-400 font-mono text-xs">
                     {displayValue}
                   </span>
                 </div>
@@ -115,7 +115,7 @@ export const DiagrammeCirculaireForm = ({ content, onChange }) => {
     onChange('parts', newParts);
   };
 
-  // Gestion du nombre de parts (entre 2 et 10)
+  // Gestion du nombre de parts (entre 2 et 7)
   const handleCountChange = (count) => {
     let updated = [...parts];
     if (count > updated.length) {
@@ -176,14 +176,14 @@ export const DiagrammeCirculaireForm = ({ content, onChange }) => {
       {/* Contrôle du nombre de parts */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Nombre de parts (2 à 10)
+          Nombre de parts (2 à 7)
         </label>
         <select
           value={parts.length}
           onChange={(e) => handleCountChange(Number(e.target.value))}
           className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
         >
-          {[...Array(9)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <option key={i + 2} value={i + 2}>
               {i + 2} parts
             </option>
