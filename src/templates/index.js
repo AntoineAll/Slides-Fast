@@ -4,6 +4,8 @@ import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm } from './DiagrammeC
 import { ComparatifVisual, ComparatifForm } from './ComparatifTemplate';
 import { TimelineVisual, TimelineForm } from './TimelineTemplate';
 import { PiliersVisual, PiliersForm } from './PiliersTemplate';
+import { FocusVisual, FocusForm } from './FocusTemplate';
+import { KpiVisual, KpiForm } from './KpiTemplate';
 
 export const templates = {
   titre_image: {
@@ -36,11 +38,23 @@ export const templates = {
     Visual: TimelineVisual,
     Form: TimelineForm,
   },
-  piliers: { 
+  piliers: {
     id: 'piliers',
     name: '3 Piliers / Valeurs',
     Visual: PiliersVisual,
     Form: PiliersForm,
+  },
+  focus: {
+    id: 'focus',
+    name: 'Mise en avant (Spotlight)',
+    Visual: FocusVisual,
+    Form: FocusForm,
+  },
+  kpi: {
+    id: 'kpi',
+    name: 'Données & KPIs',
+    Visual: KpiVisual,
+    Form: KpiForm,
   },
 };
 
