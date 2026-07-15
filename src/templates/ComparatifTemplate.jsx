@@ -45,10 +45,6 @@ export const ComparatifVisual = ({ content }) => {
           </ul>
         </div>
       </div>
-
-      <span className="absolute bottom-4 right-5 text-[10px] text-gray-600 font-mono tracking-widest select-none bg-gray-900/50 px-2 py-0.5 rounded">
-        16:9
-      </span>
     </div>
   );
 };
