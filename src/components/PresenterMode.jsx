@@ -43,7 +43,7 @@ export const PresenterMode = ({ onExit }) => {
           <h2 className="text-xl font-bold mb-4">Slide Suivante</h2>
           <div className="w-full aspect-video bg-black rounded-lg border border-gray-700 overflow-hidden relative">
             {nextSlide ? (
-              <div className="absolute top-0 left-0 origin-top-left" style={{ transform: 'scale(0.353)', width: '850px', height: '478px' }}>
+              <div className="absolute top-0 left-0 origin-top-left" style={{ transform: 'scale(0.60)', width: '850px', height: '478px' }}>
                 {templates[nextSlide.templateId]?.Visual({ content: nextSlide.content })}
               </div>
             ) : <div className="flex items-center justify-center h-full text-gray-600">Fin</div>}

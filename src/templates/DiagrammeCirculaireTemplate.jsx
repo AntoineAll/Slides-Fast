@@ -67,7 +67,7 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
 
         {/* Légende (à droite) */}
         <div className="w-[300px] bg-gray-950/40 border border-gray-800 p-4 rounded-xl max-h-[280px] overflow-y-auto space-y-3">
-          <h4 className="text-xs font-semibold text-white-400 uppercase tracking-wider mb-2">
+          <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">
             Répartition :
           </h4>
           {parts.length > 0 ? (
@@ -87,11 +87,11 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
                       className="w-3.5 h-3.5 rounded-full flex-shrink-0" 
                       style={{ backgroundColor: part.couleur || '#3B82F6' }}
                     />
-                    <span className="text-white-300 font-medium truncate" title={part.label || `Part ${index + 1}`}>
+                    <span className="text-white font-medium truncate" title={part.label || `Part ${index + 1}`}>
                       {part.label || `Part ${index + 1}`}
                     </span>
                   </div>
-                  <span className="text-white-400 font-mono text-xs">
+                  <span className="text-white font-medium text-xs">
                     {displayValue}
                   </span>
                 </div>
