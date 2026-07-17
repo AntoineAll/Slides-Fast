@@ -42,7 +42,7 @@ const SortableSlide = ({ slide, isActive, onClick, index, onDelete }) => {
             : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
         }`}
       >
-        Slide {index + 1} - {slide.template}
+        Slide {index + 1} - {slide.content?.titre}
       </button>
 
       {/* BOUTON SUPPRESSION */}
