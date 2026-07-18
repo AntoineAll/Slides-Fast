@@ -135,6 +135,30 @@ export const PiliersForm = ({ content, onChange }) => {
           </div>
         ))}
       </div>
+
+      {/* Notes du présentateur */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
+        <textarea
+          value={content?.notes || ''}
+          onChange={(e) => onChange('notes', e.target.value)}
+          placeholder="Ajoutez vos points de discours ici..."
+          rows={3}
+          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
+        />
+      </div>
     </div>
   );
 };
+
+// Composant de notes pour le PresenterMode
+export const PiliersNotes = ({ content }) => (
+  <div className="space-y-4">
+    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
+    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
+      <p className="text-gray-300 text-sm whitespace-pre-line">
+        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
+      </p>
+    </div>
+  </div>
+);

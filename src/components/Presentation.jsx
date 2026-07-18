@@ -27,7 +27,7 @@ export const Presentation = ({ onExit }) => {
 
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-      <div style={{ transform: 'scale(2)' }}>
+      <div style={{ transform: 'scale(1.5)' }}>
         {templates[slides[currentIndex].templateId]?.Visual({ content: slides[currentIndex].content })}
       </div>
       {/* Bouton de sortie propre pour ceux qui ne veulent pas utiliser Echap */}

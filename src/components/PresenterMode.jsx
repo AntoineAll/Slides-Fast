@@ -26,6 +26,9 @@ export const PresenterMode = ({ onExit }) => {
   const currentSlide = slides[currentIndex];
   const nextSlide = slides[currentIndex + 1];
 
+  // Récupération dynamique du composant Notes basé sur le templateId
+  const NotesComponent = templates[currentSlide?.templateId]?.Notes;
+
   return (
     <div className="fixed inset-0 bg-gray-950 text-white p-6 grid grid-cols-3 gap-6">
       <div className="col-span-2 flex flex-col gap-4">
@@ -33,11 +36,17 @@ export const PresenterMode = ({ onExit }) => {
         <div className="flex-1 bg-black rounded-xl overflow-hidden border border-gray-700 flex items-center justify-center">
            {templates[currentSlide?.templateId]?.Visual({ content: currentSlide.content })}
         </div>
-        <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 h-48">
-          <h3 className="text-gray-400 mb-2 font-semibold">Notes du présentateur</h3>
-          <p className="text-lg">{currentSlide?.notes || "Aucune note."}</p>
+        
+        {/* Affichage du composant Notes dynamique */}
+        <div className="bg-gray-900 p-6 rounded-xl border border-gray-700 h-48 overflow-y-auto">
+          {NotesComponent ? (
+            <NotesComponent content={currentSlide.content} />
+          ) : (
+            <p className="text-gray-400">Aucune note disponible.</p>
+          )}
         </div>
       </div>
+      
       <div className="col-span-1 flex flex-col gap-6">
         <div>
           <h2 className="text-xl font-bold mb-4">Slide Suivante</h2>

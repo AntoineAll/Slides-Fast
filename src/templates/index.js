@@ -1,11 +1,11 @@
-import { TitreImageVisual, TitreImageForm } from './TitreImageTemplate';
-import { TitreTexteVisual, TitreTexteForm } from './TitreTexteTemplate';
-import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm } from './DiagrammeCirculaireTemplate';
-import { ComparatifVisual, ComparatifForm } from './ComparatifTemplate';
-import { TimelineVisual, TimelineForm } from './TimelineTemplate';
-import { PiliersVisual, PiliersForm } from './PiliersTemplate';
-import { FocusVisual, FocusForm } from './FocusTemplate';
-import { KpiVisual, KpiForm } from './KpiTemplate';
+import { TitreImageVisual, TitreImageForm, TitreImageNotes } from './TitreImageTemplate';
+import { TitreTexteVisual, TitreTexteForm, TitreTexteNotes } from './TitreTexteTemplate';
+import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm, DiagrammeCirculaireNotes } from './DiagrammeCirculaireTemplate';
+import { ComparatifVisual, ComparatifForm, ComparatifNotes } from './ComparatifTemplate';
+import { TimelineVisual, TimelineForm, TimelineNotes } from './TimelineTemplate';
+import { PiliersVisual, PiliersForm, PiliersNotes } from './PiliersTemplate';
+import { FocusVisual, FocusForm, FocusNotes } from './FocusTemplate';
+import { KpiVisual, KpiForm, KpiNotes } from './KpiTemplate';
 
 export const templates = {
   titre_image: {
@@ -13,48 +13,56 @@ export const templates = {
     name: 'Titre & Image',
     Visual: TitreImageVisual,
     Form: TitreImageForm,
+    Notes: TitreImageNotes,
   },
   titre_texte: {
     id: 'titre_texte',
     name: 'Titre & Texte',
     Visual: TitreTexteVisual,
     Form: TitreTexteForm,
+    Notes: TitreTexteNotes,
   },
   diagramme_circulaire: {
     id: 'diagramme_circulaire',
     name: 'Diagramme Circulaire',
     Visual: DiagrammeCirculaireVisual,
     Form: DiagrammeCirculaireForm,
+    Notes: DiagrammeCirculaireNotes,
   },
   comparatif: {
     id: 'comparatif',
     name: 'Comparatif Pros/Cons',
     Visual: ComparatifVisual,
     Form: ComparatifForm,
+    Notes: ComparatifNotes,
   },
   timeline: {
     id: 'timeline',
     name: 'Timeline / Roadmap',
     Visual: TimelineVisual,
     Form: TimelineForm,
+    Notes: TimelineNotes,
   },
   piliers: {
     id: 'piliers',
     name: '3 Piliers / Valeurs',
     Visual: PiliersVisual,
     Form: PiliersForm,
+    Notes: PiliersNotes,
   },
   focus: {
     id: 'focus',
     name: 'Mise en avant (Spotlight)',
     Visual: FocusVisual,
     Form: FocusForm,
+    Notes: FocusNotes,
   },
   kpi: {
     id: 'kpi',
     name: 'Données & KPIs',
     Visual: KpiVisual,
     Form: KpiForm,
+    Notes: KpiNotes,
   },
 };
 
