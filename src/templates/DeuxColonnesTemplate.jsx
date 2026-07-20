@@ -1,0 +1,190 @@
+import React from 'react';
+
+// Rendu visuel de la slide (2 Colonnes)
+export const DeuxColonnesVisual = ({ content }) => {
+  const colG = content?.colGauche || { titre: 'Colonne 1', items: ['Élément 1', 'Élément 2'] };
+  const colD = content?.colDroite || { titre: 'Colonne 2', items: ['Élément 1', 'Élément 2'] };
+
+  return (
+    <div className="w-[850px] aspect-video bg-gray-900 rounded-2xl border-2 border-gray-700 shadow-2xl flex flex-col p-10 relative overflow-hidden flex-shrink-0">
+      {/* Titre de la slide */}
+      <h3 className="text-4xl font-extrabold text-white text-center mb-8 tracking-tight break-words max-w-full">
+        {content?.titre || 'Vue d\'ensemble'}
+      </h3>
+
+      <div className="flex-1 flex gap-8">
+        {/* Colonne Gauche */}
+        <div className="flex-1 bg-gray-800/40 border border-gray-700/60 rounded-2xl p-6 flex flex-col">
+          <h4 className="text-blue-400 font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
+            <span className="w-6 h-6 bg-blue-600/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-xs">🔹</span>
+            {colG.titre}
+          </h4>
+          <ul className="space-y-3">
+            {colG.items.map((item, i) => (
+              <li key={i} className="text-gray-200 text-sm flex items-start gap-3">
+                <span className="text-blue-500 mt-1">•</span>
+                <span className="break-words">{item || '...'}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Colonne Droite */}
+        <div className="flex-1 bg-gray-800/40 border border-gray-700/60 rounded-2xl p-6 flex flex-col">
+          <h4 className="text-blue-400 font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
+            <span className="w-6 h-6 bg-blue-600/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-xs">🔹</span>
+            {colD.titre}
+          </h4>
+          <ul className="space-y-3">
+            {colD.items.map((item, i) => (
+              <li key={i} className="text-gray-200 text-sm flex items-start gap-3">
+                <span className="text-blue-500 mt-1">•</span>
+                <span className="break-words">{item || '...'}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Formulaire d'édition pour les 2 colonnes
+export const DeuxColonnesForm = ({ content, onChange }) => {
+  const colG = content?.colGauche || { titre: 'Colonne 1', items: [''] };
+  const colD = content?.colDroite || { titre: 'Colonne 2', items: [''] };
+
+  // Mise à jour générique pour une colonne spécifique
+  const updateColumn = (side, field, value) => {
+    const key = side === 'gauche' ? 'colGauche' : 'colDroite';
+    const currentData = side === 'gauche' ? colG : colD;
+    onChange(key, { ...currentData, [field]: value });
+  };
+
+  // Mise à jour d'un item précis dans une liste
+  const updateItem = (side, index, value) => {
+    const currentData = side === 'gauche' ? colG : colD;
+    const newItems = [...currentData.items];
+    newItems[index] = value;
+    updateColumn(side, 'items', newItems);
+  };
+
+  // Ajout/Suppression d'items (limité à 6 pour le design)
+  const addItem = (side) => {
+    const currentData = side === 'gauche' ? colG : colD;
+    if (currentData.items.length < 6) {
+      updateColumn(side, 'items', [...currentData.items, '']);
+    }
+  };
+
+  const removeItem = (side, index) => {
+    const currentData = side === 'gauche' ? colG : colD;
+    if (currentData.items.length > 1) {
+      const newItems = currentData.items.filter((_, i) => i !== index);
+      updateColumn(side, 'items', newItems);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Titre Principal */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-1">Titre de la slide</label>
+        <input
+          type="text"
+          value={content?.titre || ''}
+          onChange={(e) => onChange('titre', e.target.value)}
+          placeholder="Ex: Vue d'ensemble du projet"
+          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        {/* Édition Colonne Gauche */}
+        <div className="space-y-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+          <input
+            type="text"
+            value={colG.titre}
+            onChange={(e) => updateColumn('gauche', 'titre', e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 text-blue-400 font-bold rounded-lg p-2 focus:outline-none"
+            placeholder="Titre Colonne 1"
+          />
+          <div className="space-y-2">
+            {colG.items.map((item, i) => (
+              <div key={i} className="flex gap-2">
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => updateItem('gauche', i, e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
+                  placeholder="Élément..."
+                />
+                <button onClick={() => removeItem('gauche', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
+              </div>
+            ))}
+          </div>
+          <button 
+            onClick={() => addItem('gauche')}
+            className="w-full py-1.5 border border-dashed border-gray-700 text-gray-400 hover:text-white text-xs rounded transition"
+          >
+            + Ajouter un élément
+          </button>
+        </div>
+
+        {/* Édition Colonne Droite */}
+        <div className="space-y-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+          <input
+            type="text"
+            value={colD.titre}
+            onChange={(e) => updateColumn('droite', 'titre', e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 text-blue-400 font-bold rounded-lg p-2 focus:outline-none"
+            placeholder="Titre Colonne 2"
+          />
+          <div className="space-y-2">
+            {colD.items.map((item, i) => (
+              <div key={i} className="flex gap-2">
+                <input
+                  type="text"
+                  value={item}
+                  onChange={(e) => updateItem('droite', i, e.target.value)}
+                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
+                  placeholder="Élément..."
+                />
+                <button onClick={() => removeItem('droite', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
+              </div>
+            ))}
+          </div>
+          <button 
+            onClick={() => addItem('droite')}
+            className="w-full py-1.5 border border-dashed border-gray-700 text-gray-400 hover:text-white text-xs rounded transition"
+          >
+            + Ajouter un élément
+          </button>
+        </div>
+      </div>
+
+      {/* Champ Notes pour le PresenterMode */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
+        <textarea
+          value={content?.notes || ''}
+          onChange={(e) => onChange('notes', e.target.value)}
+          className="w-full h-24 bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
+          placeholder="Ajoutez vos points de discours ici..."
+        />
+      </div>
+    </div>
+  );
+};
+
+// Composant de notes pour le PresenterMode
+export const DeuxColonnesNotes = ({ content }) => (
+  <div className="space-y-4">
+    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
+    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
+      <p className="text-gray-300 text-sm whitespace-pre-line">
+        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
+      </p>
+    </div>
+  </div>
+);

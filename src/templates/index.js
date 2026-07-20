@@ -6,6 +6,8 @@ import { TimelineVisual, TimelineForm, TimelineNotes } from './TimelineTemplate'
 import { PiliersVisual, PiliersForm, PiliersNotes } from './PiliersTemplate';
 import { FocusVisual, FocusForm, FocusNotes } from './FocusTemplate';
 import { KpiVisual, KpiForm, KpiNotes } from './KpiTemplate';
+import { DeuxColonnesVisual, DeuxColonnesForm, DeuxColonnesNotes } from './DeuxColonnesTemplate';
+import { ListeVerticaleVisual, ListeVerticaleForm, ListeVerticaleNotes } from './ListeVerticaleTemplate';
 
 export const templates = {
   titre_image: {
@@ -63,6 +65,20 @@ export const templates = {
     Visual: KpiVisual,
     Form: KpiForm,
     Notes: KpiNotes,
+  },
+  deux_colonnes: {
+    id: 'deux_colonnes',
+    name: '2 Colonnes',
+    Visual: DeuxColonnesVisual,
+    Form: DeuxColonnesForm,
+    Notes: DeuxColonnesNotes,
+  },
+  liste_verticale: {
+    id: 'liste_verticale',
+    name: 'Liste Verticale Segmentée',
+    Visual: ListeVerticaleVisual,
+    Form: ListeVerticaleForm,
+    Notes: ListeVerticaleNotes,
   },
 };
 
