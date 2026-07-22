@@ -8,6 +8,7 @@ import { FocusVisual, FocusForm, FocusNotes } from './FocusTemplate';
 import { KpiVisual, KpiForm, KpiNotes } from './KpiTemplate';
 import { DeuxColonnesVisual, DeuxColonnesForm, DeuxColonnesNotes } from './DeuxColonnesTemplate';
 import { ListeVerticaleVisual, ListeVerticaleForm, ListeVerticaleNotes } from './ListeVerticaleTemplate';
+import { BentoGridVisual, BentoGridForm, BentoGridNotes } from './BentoGridTemplate';
 
 export const templates = {
   titre_image: {
@@ -79,6 +80,13 @@ export const templates = {
     Visual: ListeVerticaleVisual,
     Form: ListeVerticaleForm,
     Notes: ListeVerticaleNotes,
+  },
+  bento_grid: {
+    id: 'bento_grid',
+    name: 'Bento Grid',
+    Visual: BentoGridVisual,
+    Form: BentoGridForm,
+    Notes: BentoGridNotes,
   },
 };
 
