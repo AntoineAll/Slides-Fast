@@ -5,6 +5,7 @@ import { Presentation } from './components/Presentation';
 import { PresenterMode } from './components/PresenterMode';
 import { useSlideStore } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
+import { validateImportedSlides } from './utils/validateImport';
 
 function App({ isDisplayMode }) {
   const { slides, setSlides, undo, redo, past, future } = useSlideStore();
@@ -87,6 +88,19 @@ function App({ isDisplayMode }) {
     }
   };
 
+  // Raccourci clavier Ctrl/Cmd+S : sauvegarde locale au lieu de la boîte "Enregistrer la page" du navigateur
+  useEffect(() => {
+    if (mode !== 'editor') return;
+    const handleKeyDown = (e) => {
+      const isModKey = e.ctrlKey || e.metaKey;
+      if (!isModKey || e.key.toLowerCase() !== 's') return;
+      e.preventDefault();
+      handleSave();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mode, handleSave]);
+
   // Sécurisation du retour à l'accueil avec option de sauvegarde
   const handleGoHome = async () => {
     if (slides && slides.length > 0) {
@@ -107,12 +121,25 @@ function App({ isDisplayMode }) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (event) => {
+      let data;
       try {
-        setSlides(JSON.parse(event.target.result));
-        setMode('editor');
-      } catch (error) { alert("Erreur JSON invalide."); }
+        data = JSON.parse(event.target.result);
+      } catch (error) {
+        alert("Erreur : ce fichier n'est pas un JSON valide.");
+        return;
+      }
+
+      const result = validateImportedSlides(data);
+      if (!result.ok) {
+        alert(`Impossible d'importer ce fichier :\n\n${result.errors.join('\n')}`);
+        return;
+      }
+
+      setSlides(result.slides);
+      setMode('editor');
     };
     reader.readAsText(file);
+    e.target.value = ''; // permet de réimporter le même fichier après une erreur
   };
 
   const launchPresentation = async () => {
