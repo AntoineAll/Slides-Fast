@@ -1,4 +1,5 @@
-import React from 'react';
+import { GenericForm } from './GenericForm';
+import { GenericNotes } from './GenericNotes';
 
 // Rendu visuel de la slide (Focus / Spotlight)
 export const FocusVisual = ({ content }) => {
@@ -22,79 +23,11 @@ export const FocusVisual = ({ content }) => {
   );
 };
 
-// Formulaire d'édition pour le template Focus
-export const FocusForm = ({ content, onChange }) => {
-  // Liste d'émojis suggérés pour la sélection rapide
-  const emojiList = ['💡', '🚀', '🎯', '⚡', '💎', '📈', '🔥', '🛡️', '⚙️', '🌍', '🏆', '⭐'];
+const fields = [
+  { key: 'icone', type: 'emojiPicker', label: 'Choisir un icône', defaultValue: '💡' },
+  { key: 'titre', type: 'text', label: 'Titre', placeholder: 'Ex: Stratégie Clé' },
+  { key: 'desc', type: 'textarea', label: 'Description', placeholder: 'Détails importants...', rows: 4 },
+];
 
-  return (
-    <div className="space-y-6">
-      {/* Sélecteur d'émojis visuel */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">Choisir un icône</label>
-        <div className="grid grid-cols-6 gap-2 bg-gray-950 p-3 rounded-xl border border-gray-800">
-          {emojiList.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={() => onChange('icone', emoji)}
-              className={`text-2xl p-2 rounded-lg hover:bg-gray-700 transition-all ${
-                (content?.icone || '💡') === emoji ? 'bg-gray-800 ring-2 ring-blue-500 shadow-md' : 'bg-gray-900'
-              }`}
-            >
-              {emoji}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Titre */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Titre</label>
-        <input
-          type="text"
-          value={content?.titre || ''}
-          onChange={(e) => onChange('titre', e.target.value)}
-          placeholder="Ex: Stratégie Clé"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:border-blue-500 focus:outline-none"
-        />
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
-        <textarea
-          value={content?.desc || ''}
-          onChange={(e) => onChange('desc', e.target.value)}
-          placeholder="Détails importants..."
-          rows={4}
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:border-blue-500 focus:outline-none resize-none"
-        />
-      </div>
-
-      {/* Notes du présentateur */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
-        <textarea
-          value={content?.notes || ''}
-          onChange={(e) => onChange('notes', e.target.value)}
-          placeholder="Ajoutez vos points de discours ici..."
-          rows={3}
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:border-blue-500 focus:outline-none resize-none"
-        />
-      </div>
-    </div>
-  );
-};
-
-// Composant de notes pour le PresenterMode
-export const FocusNotes = ({ content }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
-    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
-      <p className="text-gray-300 text-sm whitespace-pre-line">
-        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
-      </p>
-    </div>
-  </div>
-);
+export const FocusForm = (props) => <GenericForm fields={fields} {...props} />;
+export const FocusNotes = (props) => <GenericNotes {...props} />;

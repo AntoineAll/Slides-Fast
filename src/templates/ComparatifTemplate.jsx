@@ -1,4 +1,5 @@
-import React from 'react';
+import { GenericForm } from './GenericForm';
+import { GenericNotes } from './GenericNotes';
 
 // Rendu visuel de la slide (Comparatif / Pros & Cons)
 export const ComparatifVisual = ({ content }) => {
@@ -49,142 +50,33 @@ export const ComparatifVisual = ({ content }) => {
   );
 };
 
-// Formulaire d'édition pour le comparatif
-export const ComparatifForm = ({ content, onChange }) => {
-  const colG = content?.colGauche || { titre: 'Avantages', items: [''] };
-  const colD = content?.colDroite || { titre: 'Inconvénients', items: [''] };
+const fields = [
+  { key: 'titre', type: 'text', label: 'Titre de la slide', placeholder: 'Ex: Analyse de la Solution A' },
+  {
+    type: 'twoColumnList',
+    maxItems: 6,
+    columns: [
+      {
+        key: 'colGauche',
+        defaultTitle: 'Avantages',
+        titlePlaceholder: 'Titre Gauche',
+        itemPlaceholder: 'Argument...',
+        containerClass: 'bg-emerald-950/20 border-emerald-900/30',
+        titleClass: 'text-emerald-400',
+        addClass: 'border-emerald-800/50 text-emerald-600 hover:text-emerald-400',
+      },
+      {
+        key: 'colDroite',
+        defaultTitle: 'Inconvénients',
+        titlePlaceholder: 'Titre Droite',
+        itemPlaceholder: 'Argument...',
+        containerClass: 'bg-rose-950/20 border-rose-900/30',
+        titleClass: 'text-rose-400',
+        addClass: 'border-rose-800/50 text-rose-600 hover:text-rose-400',
+      },
+    ],
+  },
+];
 
-  // Mise à jour générique pour une colonne spécifique
-  const updateColumn = (side, field, value) => {
-    const key = side === 'gauche' ? 'colGauche' : 'colDroite';
-    const currentData = side === 'gauche' ? colG : colD;
-    onChange(key, { ...currentData, [field]: value });
-  };
-
-  // Mise à jour d'un item précis dans une liste
-  const updateItem = (side, index, value) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    const newItems = [...currentData.items];
-    newItems[index] = value;
-    updateColumn(side, 'items', newItems);
-  };
-
-  // Ajout/Suppression d'items (limité à 6 pour le design)
-  const addItem = (side) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    if (currentData.items.length < 6) {
-      updateColumn(side, 'items', [...currentData.items, '']);
-    }
-  };
-
-  const removeItem = (side, index) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    if (currentData.items.length > 1) {
-      const newItems = currentData.items.filter((_, i) => i !== index);
-      updateColumn(side, 'items', newItems);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Titre Principal */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Titre de la slide</label>
-        <input
-          type="text"
-          value={content?.titre || ''}
-          onChange={(e) => onChange('titre', e.target.value)}
-          placeholder="Ex: Analyse de la Solution A"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        {/* Édition Colonne Gauche */}
-        <div className="space-y-4 bg-emerald-950/20 p-4 rounded-xl border border-emerald-900/30">
-          <input
-            type="text"
-            value={colG.titre}
-            onChange={(e) => updateColumn('gauche', 'titre', e.target.value)}
-            className="w-full bg-emerald-900/40 border border-emerald-800/50 text-emerald-400 font-bold rounded-lg p-2 focus:outline-none"
-            placeholder="Titre Gauche"
-          />
-          <div className="space-y-2">
-            {colG.items.map((item, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  type="text"
-                  value={item}
-                  onChange={(e) => updateItem('gauche', i, e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
-                  placeholder="Argument..."
-                />
-                <button onClick={() => removeItem('gauche', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
-              </div>
-            ))}
-          </div>
-          <button 
-            onClick={() => addItem('gauche')}
-            className="w-full py-1.5 border border-dashed border-emerald-800/50 text-emerald-600 hover:text-emerald-400 text-xs rounded transition"
-          >
-            + Ajouter un point
-          </button>
-        </div>
-
-        {/* Édition Colonne Droite */}
-        <div className="space-y-4 bg-rose-950/20 p-4 rounded-xl border border-rose-900/30">
-          <input
-            type="text"
-            value={colD.titre}
-            onChange={(e) => updateColumn('droite', 'titre', e.target.value)}
-            className="w-full bg-rose-900/40 border border-rose-800/50 text-rose-400 font-bold rounded-lg p-2 focus:outline-none"
-            placeholder="Titre Droite"
-          />
-          <div className="space-y-2">
-            {colD.items.map((item, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  type="text"
-                  value={item}
-                  onChange={(e) => updateItem('droite', i, e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
-                  placeholder="Argument..."
-                />
-                <button onClick={() => removeItem('droite', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
-              </div>
-            ))}
-          </div>
-          <button 
-            onClick={() => addItem('droite')}
-            className="w-full py-1.5 border border-dashed border-rose-800/50 text-rose-600 hover:text-rose-400 text-xs rounded transition"
-          >
-            + Ajouter un point
-          </button>
-        </div>
-      </div>
-
-      {/* Champ Notes pour le PresenterMode */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
-        <textarea
-          value={content?.notes || ''}
-          onChange={(e) => onChange('notes', e.target.value)}
-          className="w-full h-24 bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-          placeholder="Ajoutez vos points de discours ici..."
-        />
-      </div>
-    </div>
-  );
-};
-
-// Composant de notes pour le PresenterMode
-export const ComparatifNotes = ({ content }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
-    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
-      <p className="text-gray-300 text-sm whitespace-pre-line">
-        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
-      </p>
-    </div>
-  </div>
-);
+export const ComparatifForm = (props) => <GenericForm fields={fields} {...props} />;
+export const ComparatifNotes = (props) => <GenericNotes {...props} />;

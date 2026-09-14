@@ -1,10 +1,11 @@
-import React from 'react';
+import { GenericForm } from './GenericForm';
+import { GenericNotes } from './GenericNotes';
 
 // Rendu visuel de la slide (Diagramme + Légende)
 export const DiagrammeCirculaireVisual = ({ content }) => {
   const parts = content?.parts || [];
   const unite = content?.unite || 'quantite'; // 'quantite' ou 'pourcentage'
-  
+
   // Calcul de la somme totale pour les calculs de proportion
   const total = parts.reduce((sum, p) => sum + Number(p.valeur || 0), 0);
 
@@ -13,7 +14,7 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
   const svgSlices = parts.map((part, index) => {
     const value = Number(part.valeur || 0);
     if (total === 0 || value === 0) return null;
-    
+
     const percent = value / total;
     const startPercent = cumulativePercent;
     const endPercent = cumulativePercent + percent;
@@ -48,7 +49,7 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
       <h3 className="text-4xl font-extrabold text-white text-center tracking-tight break-words max-w-full">
         {content?.titre || 'Aucun titre'}
       </h3>
-      
+
       {/* Contenu : Diagramme à gauche, Légende à droite */}
       <div className="flex-1 flex items-center justify-around px-4">
         {/* Diagramme Circulaire (SVG centré) */}
@@ -74,17 +75,17 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
             parts.map((part, index) => {
               const value = Number(part.valeur || 0);
               const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-              
+
               // Affichage conditionnel selon l'unité choisie
-              const displayValue = unite === 'pourcentage' 
-                ? `${percentage}%` 
+              const displayValue = unite === 'pourcentage'
+                ? `${percentage}%`
                 : `${value} (${percentage}%)`;
 
               return (
                 <div key={index} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 overflow-hidden pr-2">
-                    <span 
-                      className="w-3.5 h-3.5 rounded-full flex-shrink-0" 
+                    <span
+                      className="w-3.5 h-3.5 rounded-full flex-shrink-0"
                       style={{ backgroundColor: part.couleur || '#3B82F6' }}
                     />
                     <span className="text-white font-medium truncate" title={part.label || `Part ${index + 1}`}>
@@ -106,165 +107,32 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
   );
 };
 
-// Formulaire d'édition dynamique
-export const DiagrammeCirculaireForm = ({ content, onChange }) => {
-  const parts = content?.parts || [{ label: '', valeur: 10, couleur: '#3B82F6' }, { label: '', valeur: 20, couleur: '#10B981' }, { label: '', valeur: 30, couleur: '#F59E0B' }];
-  const unite = content?.unite || 'quantite';
+const fields = [
+  { key: 'titre', type: 'text', label: 'Titre de la slide', placeholder: 'Ex: Répartition du budget' },
+  {
+    key: 'unite',
+    type: 'toggle',
+    label: "Unité d'affichage des parts",
+    options: [
+      { value: 'quantite', label: 'Quantités (Valeurs brutes)' },
+      { value: 'pourcentage', label: 'Pourcentages (%)' },
+    ],
+  },
+  {
+    key: 'parts',
+    type: 'objectList',
+    label: 'Configuration des parts',
+    countMode: 'select',
+    min: 2,
+    max: 7,
+    unitLabel: 'parts',
+    fields: [
+      { key: 'label', type: 'text', label: null, placeholder: 'Libellé' },
+      { key: 'valeur', type: 'number', label: null, placeholder: 'Valeur', defaultValue: 10 },
+      { key: 'couleur', type: 'color', label: 'Couleur :' },
+    ],
+  },
+];
 
-  const updateParts = (newParts) => {
-    onChange('parts', newParts);
-  };
-
-  // Gestion du nombre de parts (entre 2 et 7)
-  const handleCountChange = (count) => {
-    let updated = [...parts];
-    if (count > updated.length) {
-      const colors = ['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#6366F1'];
-      while(updated.length < count) {
-        updated.push({ 
-          label: '', 
-          valeur: 10, 
-          couleur: colors[updated.length % colors.length] 
-        });
-      }
-    } else {
-      updated = updated.slice(0, count);
-    }
-    updateParts(updated);
-  };
-
-  const handlePartChange = (index, field, value) => {
-    const updated = parts.map((part, i) => 
-      i === index ? { ...part, [field]: value } : part
-    );
-    updateParts(updated);
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Titre de la slide */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Titre de la slide</label>
-        <input
-          type="text"
-          value={content?.titre || ''}
-          onChange={(e) => onChange('titre', e.target.value)}
-          placeholder="Ex: Répartition du budget"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-        />
-      </div>
-
-      
-      {/* Choix de l'unité (Quantité ou Pourcentage) */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Unité d'affichage des parts
-        </label>
-        <div className="flex bg-gray-950 p-1 rounded-xl border border-gray-800">
-          <button
-            type="button"
-            onClick={() => onChange('unite', 'quantite')}
-            className={`flex-1 py-2.5 text-xs font-semibold rounded-lg transition ${
-              unite === 'quantite'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            Quantités (Valeurs brutes)
-          </button>
-          <button
-            type="button"
-            onClick={() => onChange('unite', 'pourcentage')}
-            className={`flex-1 py-2.5 text-xs font-semibold rounded-lg transition ${
-              unite === 'pourcentage'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            Pourcentages (%)
-          </button>
-        </div>
-      </div>
-
-      {/* Contrôle du nombre de parts */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Nombre de parts (2 à 7)
-        </label>
-        <select
-          value={parts.length}
-          onChange={(e) => handleCountChange(Number(e.target.value))}
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-        >
-          {[...Array(6)].map((_, i) => (
-            <option key={i + 2} value={i + 2}>
-              {i + 2} parts
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Édition de chaque part */}
-      <div className="space-y-4 border-t border-gray-800 pt-4">
-        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-          Configuration des parts
-        </h4>
-        
-        {parts.map((part, index) => (
-          <div key={index} className="grid grid-cols-12 gap-2 items-center bg-gray-950 p-3 rounded-xl border border-gray-800/50">
-            <div className="col-span-5">
-              <input
-                type="text"
-                value={part.label || ''}
-                onChange={(e) => handlePartChange(index, 'label', e.target.value)}
-                placeholder={`Libellé ${index + 1}`}
-                className="w-full bg-gray-800 border border-gray-700 text-white text-xs rounded-lg p-2 focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="col-span-3">
-              <input
-                type="number"
-                value={part.valeur || ''}
-                onChange={(e) => handlePartChange(index, 'valeur', Number(e.target.value))}
-                placeholder={unite === 'pourcentage' ? '%' : 'Valeur'}
-                className="w-full bg-gray-800 border border-gray-700 text-white text-xs rounded-lg p-2 focus:outline-none focus:border-blue-500"
-              />
-            </div>
-            <div className="col-span-4 flex items-center gap-2 justify-end">
-              <span className="text-[10px] text-gray-500">Couleur :</span>
-              <input
-                type="color"
-                value={part.couleur || '#3B82F6'}
-                onChange={(e) => handlePartChange(index, 'couleur', e.target.value)}
-                className="w-8 h-8 rounded border-0 cursor-pointer bg-transparent"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      {/* Notes du présentateur */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
-        <textarea
-          value={content?.notes || ''}
-          onChange={(e) => onChange('notes', e.target.value)}
-          className="w-full h-24 bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-          placeholder="Ajoutez vos points de discours ici..."
-        />
-      </div>
-    </div>
-  );
-};
-
-// Composant de notes pour le PresenterMode
-export const DiagrammeCirculaireNotes = ({ content }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
-    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
-      <p className="text-gray-300 text-sm whitespace-pre-line">
-        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
-      </p>
-    </div>
-  </div>
-);
+export const DiagrammeCirculaireForm = (props) => <GenericForm fields={fields} {...props} />;
+export const DiagrammeCirculaireNotes = (props) => <GenericNotes {...props} />;

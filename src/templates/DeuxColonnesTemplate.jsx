@@ -1,4 +1,5 @@
-import React from 'react';
+import { GenericForm } from './GenericForm';
+import { GenericNotes } from './GenericNotes';
 
 // Rendu visuel de la slide (2 Colonnes)
 export const DeuxColonnesVisual = ({ content }) => {
@@ -49,142 +50,33 @@ export const DeuxColonnesVisual = ({ content }) => {
   );
 };
 
-// Formulaire d'édition pour les 2 colonnes
-export const DeuxColonnesForm = ({ content, onChange }) => {
-  const colG = content?.colGauche || { titre: 'Colonne 1', items: [''] };
-  const colD = content?.colDroite || { titre: 'Colonne 2', items: [''] };
+const fields = [
+  { key: 'titre', type: 'text', label: 'Titre de la slide', placeholder: "Ex: Vue d'ensemble du projet" },
+  {
+    type: 'twoColumnList',
+    maxItems: 6,
+    columns: [
+      {
+        key: 'colGauche',
+        defaultTitle: 'Colonne 1',
+        titlePlaceholder: 'Titre Colonne 1',
+        itemPlaceholder: 'Élément...',
+        containerClass: 'bg-gray-900/60 border-gray-800',
+        titleClass: 'text-blue-400',
+        addClass: 'border-gray-700 text-gray-400 hover:text-white',
+      },
+      {
+        key: 'colDroite',
+        defaultTitle: 'Colonne 2',
+        titlePlaceholder: 'Titre Colonne 2',
+        itemPlaceholder: 'Élément...',
+        containerClass: 'bg-gray-900/60 border-gray-800',
+        titleClass: 'text-blue-400',
+        addClass: 'border-gray-700 text-gray-400 hover:text-white',
+      },
+    ],
+  },
+];
 
-  // Mise à jour générique pour une colonne spécifique
-  const updateColumn = (side, field, value) => {
-    const key = side === 'gauche' ? 'colGauche' : 'colDroite';
-    const currentData = side === 'gauche' ? colG : colD;
-    onChange(key, { ...currentData, [field]: value });
-  };
-
-  // Mise à jour d'un item précis dans une liste
-  const updateItem = (side, index, value) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    const newItems = [...currentData.items];
-    newItems[index] = value;
-    updateColumn(side, 'items', newItems);
-  };
-
-  // Ajout/Suppression d'items (limité à 6 pour le design)
-  const addItem = (side) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    if (currentData.items.length < 6) {
-      updateColumn(side, 'items', [...currentData.items, '']);
-    }
-  };
-
-  const removeItem = (side, index) => {
-    const currentData = side === 'gauche' ? colG : colD;
-    if (currentData.items.length > 1) {
-      const newItems = currentData.items.filter((_, i) => i !== index);
-      updateColumn(side, 'items', newItems);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Titre Principal */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Titre de la slide</label>
-        <input
-          type="text"
-          value={content?.titre || ''}
-          onChange={(e) => onChange('titre', e.target.value)}
-          placeholder="Ex: Vue d'ensemble du projet"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        {/* Édition Colonne Gauche */}
-        <div className="space-y-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
-          <input
-            type="text"
-            value={colG.titre}
-            onChange={(e) => updateColumn('gauche', 'titre', e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 text-blue-400 font-bold rounded-lg p-2 focus:outline-none"
-            placeholder="Titre Colonne 1"
-          />
-          <div className="space-y-2">
-            {colG.items.map((item, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  type="text"
-                  value={item}
-                  onChange={(e) => updateItem('gauche', i, e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
-                  placeholder="Élément..."
-                />
-                <button onClick={() => removeItem('gauche', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
-              </div>
-            ))}
-          </div>
-          <button 
-            onClick={() => addItem('gauche')}
-            className="w-full py-1.5 border border-dashed border-gray-700 text-gray-400 hover:text-white text-xs rounded transition"
-          >
-            + Ajouter un élément
-          </button>
-        </div>
-
-        {/* Édition Colonne Droite */}
-        <div className="space-y-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
-          <input
-            type="text"
-            value={colD.titre}
-            onChange={(e) => updateColumn('droite', 'titre', e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 text-blue-400 font-bold rounded-lg p-2 focus:outline-none"
-            placeholder="Titre Colonne 2"
-          />
-          <div className="space-y-2">
-            {colD.items.map((item, i) => (
-              <div key={i} className="flex gap-2">
-                <input
-                  type="text"
-                  value={item}
-                  onChange={(e) => updateItem('droite', i, e.target.value)}
-                  className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
-                  placeholder="Élément..."
-                />
-                <button onClick={() => removeItem('droite', i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
-              </div>
-            ))}
-          </div>
-          <button 
-            onClick={() => addItem('droite')}
-            className="w-full py-1.5 border border-dashed border-gray-700 text-gray-400 hover:text-white text-xs rounded transition"
-          >
-            + Ajouter un élément
-          </button>
-        </div>
-      </div>
-
-      {/* Champ Notes pour le PresenterMode */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
-        <textarea
-          value={content?.notes || ''}
-          onChange={(e) => onChange('notes', e.target.value)}
-          className="w-full h-24 bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-          placeholder="Ajoutez vos points de discours ici..."
-        />
-      </div>
-    </div>
-  );
-};
-
-// Composant de notes pour le PresenterMode
-export const DeuxColonnesNotes = ({ content }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
-    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
-      <p className="text-gray-300 text-sm whitespace-pre-line">
-        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
-      </p>
-    </div>
-  </div>
-);
+export const DeuxColonnesForm = (props) => <GenericForm fields={fields} {...props} />;
+export const DeuxColonnesNotes = (props) => <GenericNotes {...props} />;

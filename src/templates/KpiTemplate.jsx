@@ -1,4 +1,5 @@
-import React from 'react';
+import { GenericForm } from './GenericForm';
+import { GenericNotes } from './GenericNotes';
 
 // Rendu visuel de la slide (KPI / Indicateur)
 export const KpiVisual = ({ content }) => {
@@ -37,73 +38,11 @@ export const KpiVisual = ({ content }) => {
   );
 };
 
-// Formulaire d'édition
-export const KpiForm = ({ content, onChange }) => {
-  const updatePoints = (index, value) => {
-    const newPoints = [...(content?.points || ['', '', '', ''])];
-    newPoints[index] = value;
-    onChange('points', newPoints);
-  };
+const fields = [
+  { key: 'chiffre', type: 'text', label: 'Chiffre / Indicateur', placeholder: 'Ex: 85%' },
+  { key: 'label', type: 'text', label: 'Label du chiffre', placeholder: 'Ex: Croissance annuelle' },
+  { key: 'points', type: 'list', label: 'Points de contexte', min: 4, max: 4, itemPlaceholder: (i) => `Point ${i + 1}` },
+];
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Chiffre / Indicateur</label>
-        <input
-          type="text"
-          value={content?.chiffre || ''}
-          onChange={(e) => onChange('chiffre', e.target.value)}
-          placeholder="Ex: 85%"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Label du chiffre</label>
-        <input
-          type="text"
-          value={content?.label || ''}
-          onChange={(e) => onChange('label', e.target.value)}
-          placeholder="Ex: Croissance annuelle"
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3"
-        />
-      </div>
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-300">Points de contexte</label>
-        {[0, 1, 2, 3].map((i) => (
-          <input
-            key={i}
-            type="text"
-            value={content?.points?.[i] || ''}
-            onChange={(e) => updatePoints(i, e.target.value)}
-            placeholder={`Point ${i + 1}`}
-            className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-2 text-sm"
-          />
-        ))}
-      </div>
-
-      {/* Notes du présentateur */}
-      <div>
-        <label className="block text-sm font-medium text-gray-300 mb-1">Notes du présentateur</label>
-        <textarea
-          value={content?.notes || ''}
-          onChange={(e) => onChange('notes', e.target.value)}
-          placeholder="Ajoutez vos points de discours ici..."
-          rows={3}
-          className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3"
-        />
-      </div>
-    </div>
-  );
-};
-
-// Composant de notes pour le PresenterMode
-export const KpiNotes = ({ content }) => (
-  <div className="space-y-4">
-    <h3 className="text-lg font-bold text-blue-400">Notes</h3>
-    <div className="p-3 bg-gray-800 rounded border border-gray-700 min-h-[100px]">
-      <p className="text-gray-300 text-sm whitespace-pre-line">
-        {content?.notes || "Aucune note spécifique ajoutée pour cette slide."}
-      </p>
-    </div>
-  </div>
-);
+export const KpiForm = (props) => <GenericForm fields={fields} {...props} />;
+export const KpiNotes = (props) => <GenericNotes {...props} />;
