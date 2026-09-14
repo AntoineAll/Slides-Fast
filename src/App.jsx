@@ -28,9 +28,9 @@ function App({ isDisplayMode }) {
 
   // Clonage profond et ajout d'un ID unique par slide
   const handleSelectPreset = (preset) => {
-    const freshSlides = preset.slides.map((slide, index) => ({
+    const freshSlides = preset.slides.map((slide) => ({
       ...slide,
-      id: Date.now() + index,
+      id: crypto.randomUUID(),
       content: JSON.parse(JSON.stringify(slide.content || {}))
     }));
 

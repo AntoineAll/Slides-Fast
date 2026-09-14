@@ -9,9 +9,9 @@ export const useSlideStore = create(
       activeSlideId: 1,
 
       addSlide: (templateType = 'titre_image') => set((state) => ({
-        slides: [...state.slides, { 
-          id: Date.now(), 
-          templateId: templateType, 
+        slides: [...state.slides, {
+          id: crypto.randomUUID(),
+          templateId: templateType,
           content: { titre: 'Nouvelle Slide' },
           notes: '' // Initialisation des notes
         }]
