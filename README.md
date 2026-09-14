@@ -28,15 +28,12 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 
 ## Installation
 
-Le code de l'application se trouve dans [`slide-app/`](slide-app).
-
 ```bash
-cd slide-app
 npm install
 npm run dev
 ```
 
-Autres commandes disponibles dans `slide-app/` :
+Autres commandes disponibles :
 
 ```bash
 npm run build     # build de production
