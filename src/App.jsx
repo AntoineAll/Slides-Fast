@@ -7,8 +7,8 @@ import { useSlideStore } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
 
 function App({ isDisplayMode }) {
-  const { slides, setSlides } = useSlideStore();
-  
+  const { slides, setSlides, undo, redo, past, future } = useSlideStore();
+
   const [mode, setMode] = useState(() => {
     if (isDisplayMode) return 'display';
     return slides && slides.length > 0 ? 'editor' : 'home';
@@ -25,6 +25,30 @@ function App({ isDisplayMode }) {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [mode, slides]);
+
+  // Raccourcis clavier Annuler/Rétablir (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z ou Ctrl+Y)
+  // On laisse le undo natif du navigateur gérer un champ texte en cours de focus.
+  useEffect(() => {
+    if (mode !== 'editor') return;
+    const handleKeyDown = (e) => {
+      const isModKey = e.ctrlKey || e.metaKey;
+      if (!isModKey || e.key.toLowerCase() !== 'z' && e.key.toLowerCase() !== 'y') return;
+
+      const target = e.target;
+      const isEditableField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+      if (isEditableField) return;
+
+      if (e.key.toLowerCase() === 'y' || (e.key.toLowerCase() === 'z' && e.shiftKey)) {
+        e.preventDefault();
+        redo();
+      } else if (e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        undo();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mode, undo, redo]);
 
   // Clonage profond et ajout d'un ID unique par slide
   const handleSelectPreset = (preset) => {
@@ -192,6 +216,23 @@ function App({ isDisplayMode }) {
           </button>
           
           <div className="flex items-center gap-2">
+            <button
+              onClick={undo}
+              disabled={past.length === 0}
+              title="Annuler (Ctrl+Z)"
+              className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-700"
+            >
+              ↶
+            </button>
+            <button
+              onClick={redo}
+              disabled={future.length === 0}
+              title="Rétablir (Ctrl+Shift+Z)"
+              className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-700"
+            >
+              ↷
+            </button>
+            <div className="w-px h-5 bg-gray-800 mx-1" />
             <button onClick={launchPresentation} className="bg-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-500">Lancer</button>
             <button onClick={handleSave} className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600">Save</button>
             <label className="bg-gray-700 px-3 py-1 rounded text-sm cursor-pointer hover:bg-gray-600">
