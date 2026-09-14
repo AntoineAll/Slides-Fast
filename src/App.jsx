@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Editor } from './components/Editor';
 import { Presentation } from './components/Presentation'; 
@@ -6,14 +6,25 @@ import { PresenterMode } from './components/PresenterMode';
 import { useSlideStore } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
 import { validateImportedSlides } from './utils/validateImport';
+import { useAutoSave } from './hooks/useAutoSave';
 
 function App({ isDisplayMode }) {
-  const { slides, setSlides, undo, redo, past, future } = useSlideStore();
+  const { slides, setSlides, setActiveSlideId, undo, redo, past, future } = useSlideStore();
 
   const [mode, setMode] = useState(() => {
     if (isDisplayMode) return 'display';
     return slides && slides.length > 0 ? 'editor' : 'home';
   });
+
+  // Remplace tout le document par un autre (preset, import, ouverture via auto-save) :
+  // setSlides seul ne suffit pas, activeSlideId pointerait vers un id qui n'existe plus
+  // dans les nouvelles slides (elles ont toutes de nouveaux id), et l'éditeur semblerait vide.
+  const loadNewDocument = useCallback((newSlides) => {
+    setSlides(newSlides);
+    setActiveSlideId(newSlides[0]?.id ?? null);
+  }, [setSlides, setActiveSlideId]);
+
+  const autoSave = useAutoSave(slides, mode === 'editor', loadNewDocument);
 
   // Protection contre la fermeture accidentelle de l'onglet/rafraîchissement global
   useEffect(() => {
@@ -52,14 +63,17 @@ function App({ isDisplayMode }) {
   }, [mode, undo, redo]);
 
   // Clonage profond et ajout d'un ID unique par slide
-  const handleSelectPreset = (preset) => {
+  const handleSelectPreset = async (preset) => {
     const freshSlides = preset.slides.map((slide) => ({
       ...slide,
       id: crypto.randomUUID(),
       content: JSON.parse(JSON.stringify(slide.content || {}))
     }));
 
-    setSlides(freshSlides);
+    // On détache l'auto-save avant de charger un autre document : sinon ces nouvelles
+    // slides (vierges) seraient écrites dans l'ancien fichier lié, l'écrasant.
+    await autoSave.unlink();
+    loadNewDocument(freshSlides);
     setMode('editor');
   };
 
@@ -103,7 +117,8 @@ function App({ isDisplayMode }) {
 
   // Sécurisation du retour à l'accueil avec option de sauvegarde
   const handleGoHome = async () => {
-    if (slides && slides.length > 0) {
+    // L'auto-save garde déjà le fichier à jour, inutile de redemander une sauvegarde manuelle
+    if (slides && slides.length > 0 && autoSave.status !== 'linked') {
       const wantToSave = window.confirm(
         "Attention, retourner à l'accueil va réinitialiser ou changer votre présentation en cours.\nVoulez-vous sauvegarder votre travail avant de quitter ?"
       );
@@ -120,7 +135,7 @@ function App({ isDisplayMode }) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       let data;
       try {
         data = JSON.parse(event.target.result);
@@ -135,7 +150,10 @@ function App({ isDisplayMode }) {
         return;
       }
 
-      setSlides(result.slides);
+      // Idem : on détache l'auto-save avant de charger ce nouveau document, pour ne pas
+      // écraser l'ancien fichier lié avec le contenu qu'on vient d'importer.
+      await autoSave.unlink();
+      loadNewDocument(result.slides);
       setMode('editor');
     };
     reader.readAsText(file);
@@ -266,6 +284,56 @@ function App({ isDisplayMode }) {
               Import
               <input type="file" className="hidden" accept=".json" onChange={handleImport} />
             </label>
+
+            {autoSave.isSupported && (
+              <>
+                <div className="w-px h-5 bg-gray-800 mx-1" />
+                {autoSave.status === 'unlinked' && (
+                  <>
+                    <button
+                      onClick={autoSave.openExisting}
+                      title="Ouvrir une présentation existante et la garder synchronisée sur ce fichier"
+                      className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600"
+                    >
+                      📂 Ouvrir
+                    </button>
+                    <button
+                      onClick={autoSave.createNew}
+                      title="Créer un nouveau fichier disque et y auto-sauvegarder cette présentation"
+                      className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600"
+                    >
+                      ✨ Nouveau (auto-save)
+                    </button>
+                  </>
+                )}
+                {autoSave.status === 'needs-permission' && (
+                  <button
+                    onClick={autoSave.grantPermission}
+                    title={`Réautoriser l'accès à ${autoSave.fileName}`}
+                    className="bg-amber-700 px-3 py-1 rounded text-sm hover:bg-amber-600"
+                  >
+                    🔓 Réautoriser l'auto-save
+                  </button>
+                )}
+                {(autoSave.status === 'linked' || autoSave.status === 'saving') && (
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400" title={autoSave.fileName}>
+                    <span>💾 {autoSave.status === 'saving' ? 'Sauvegarde…' : autoSave.fileName}</span>
+                    <button
+                      onClick={autoSave.unlink}
+                      title="Désactiver l'auto-save"
+                      className="text-gray-500 hover:text-red-400 px-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+                {autoSave.status === 'error' && (
+                  <span className="text-xs text-red-400" title="Échec de l'écriture sur le disque, réessai à la prochaine modification">
+                    ⚠ Auto-save en erreur
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </header>
         <Editor />
