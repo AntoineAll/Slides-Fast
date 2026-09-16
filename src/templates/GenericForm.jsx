@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { fileToSlideImage } from '../utils/imageFile';
 
 // Moteur de formulaire déclaratif : chaque template décrit ses champs avec un simple
 // tableau de descripteurs (voir les types ci-dessous) au lieu de dupliquer le JSX des
@@ -12,6 +14,8 @@
 // - objectList   : tableau d'objets dont les champs sont eux-mêmes décrits par `fields`
 //                  (countMode: 'fixed' | 'addRemove' | 'select')
 // - twoColumnList (top-level uniquement) : deux groupes {titre, items[]} côte à côte
+// - image        : import depuis le disque (converti en data URL locale, redimensionné
+//                  sans déformation si trop grand) avec une URL externe en secours
 
 const inputClass = 'w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500';
 const smallInputClass = 'w-full bg-gray-800 border border-gray-700 text-white text-xs rounded p-2 focus:outline-none focus:border-blue-500';
@@ -68,6 +72,66 @@ const ColorField = ({ field, value, onChange }) => (
     />
   </div>
 );
+
+// Une image "value" peut être soit une data URL issue d'un import local, soit une URL externe
+// collée par l'utilisateur. On ne préremplit le champ URL qu'avec le second cas : réafficher
+// un data URL (potentiellement des mégaoctets de base64) dans un input texte n'aurait aucun sens.
+const isDataUrl = (value) => typeof value === 'string' && value.startsWith('data:');
+
+const ImageField = ({ field, value, onChange }) => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    e.target.value = ''; // permet de réimporter le même fichier après une erreur
+    if (!file) return;
+
+    setError(null);
+    setIsLoading(true);
+    try {
+      onChange(await fileToSlideImage(file));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      {field.label && <label className={labelClass}>{field.label}</label>}
+
+      {value && (
+        <div className="relative mb-2 rounded-lg overflow-hidden border border-gray-700 bg-gray-950">
+          <img src={value} alt="Aperçu" className="w-full max-h-40 object-contain" />
+          <button
+            type="button"
+            onClick={() => onChange('')}
+            title="Retirer l'image"
+            className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-gray-900/80 text-gray-300 hover:bg-red-900/80 hover:text-white transition"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      <label className={`${smallInputClass} flex items-center justify-center gap-1.5 text-center cursor-pointer hover:border-blue-500 transition ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
+        📁 {isLoading ? 'Import…' : "Importer depuis l'ordinateur"}
+        <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+      </label>
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
+
+      <input
+        type="text"
+        value={isDataUrl(value) ? '' : value || ''}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={isDataUrl(value) ? "Ou remplacer par une URL d'image..." : (field.placeholder || "Ou collez une URL d'image...")}
+        className={`${smallInputClass} mt-2`}
+      />
+    </div>
+  );
+};
 
 const EmojiPickerField = ({ field, value, onChange }) => (
   <div>
@@ -274,6 +338,7 @@ const FieldRenderer = ({ field, value, onChange }) => {
     case 'textarea': return <TextareaField field={field} value={value} onChange={onChange} />;
     case 'number': return <NumberField field={field} value={value} onChange={onChange} />;
     case 'color': return <ColorField field={field} value={value} onChange={onChange} />;
+    case 'image': return <ImageField field={field} value={value} onChange={onChange} />;
     case 'emojiPicker': return <EmojiPickerField field={field} value={value} onChange={onChange} />;
     case 'toggle': return <ToggleField field={field} value={value} onChange={onChange} />;
     case 'list': return <ListField field={field} value={value} onChange={onChange} />;

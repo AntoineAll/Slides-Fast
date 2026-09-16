@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSlideStore } from '../store/useSlideStore';
 import { templates } from '../templates';
+import { useViewportFitScale } from '../hooks/useViewportFitScale';
 
 export const Presentation = ({ onExit }) => {
   const { slides } = useSlideStore();
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Un zoom fixe (ex: scale(1.5)) peut dépasser la hauteur de la fenêtre sur un petit écran
+  // et couper silencieusement le bas de la slide (typiquement une légende sous l'image).
+  const scale = useViewportFitScale(850, 478);
 
   // Sync avec le présentateur
   useEffect(() => {
@@ -27,7 +31,7 @@ export const Presentation = ({ onExit }) => {
 
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-      <div style={{ transform: 'scale(1.5)' }}>
+      <div style={{ transform: `scale(${scale})` }}>
         {templates[slides[currentIndex].templateId]?.Visual({ content: slides[currentIndex].content })}
       </div>
       {/* Bouton de sortie propre pour ceux qui ne veulent pas utiliser Echap */}
