@@ -10,7 +10,7 @@ import { validateImportedSlides } from './utils/validateImport';
 import { useAutoSave } from './hooks/useAutoSave';
 
 function App({ isDisplayMode }) {
-  const { slides, setSlides, setActiveSlideId, undo, redo, past, future } = useSlideStore();
+  const { slides, activeSlideId, setSlides, setActiveSlideId, undo, redo, past, future } = useSlideStore();
 
   const [mode, setMode] = useState(() => {
     if (isDisplayMode) return 'display';
@@ -62,6 +62,34 @@ function App({ isDisplayMode }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mode, undo, redo]);
+
+  // Navigation clavier entre slides (flèches haut/gauche = précédente, bas/droite =
+  // suivante), utile aussi bien depuis l'onglet Visuel que Formulaire. On ignore les
+  // champs éditables (et les <select>, dont les flèches changent nativement la valeur)
+  // pour ne jamais interférer avec la saisie.
+  useEffect(() => {
+    if (mode !== 'editor') return;
+    const handleKeyDown = (e) => {
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+
+      const target = e.target;
+      const isEditableField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' || target.isContentEditable;
+      if (isEditableField) return;
+
+      const currentIndex = slides.findIndex((s) => s.id === activeSlideId);
+      if (currentIndex === -1) return;
+
+      const delta = (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : 1;
+      const nextIndex = currentIndex + delta;
+      if (nextIndex < 0 || nextIndex >= slides.length) return;
+
+      e.preventDefault();
+      setActiveSlideId(slides[nextIndex].id);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mode, slides, activeSlideId, setActiveSlideId]);
 
   // Clonage profond et ajout d'un ID unique par slide
   const handleSelectPreset = async (preset) => {
