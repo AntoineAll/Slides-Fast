@@ -43,6 +43,32 @@ export const useSlideStore = create(
           }));
         },
 
+        // Insère une copie juste après l'originale et la rend active, pour le geste
+        // "dupliquer puis ajuster" typique d'un éditeur de slides.
+        duplicateSlide: (id) => {
+          lastEdit = null;
+          set((state) => {
+            const index = state.slides.findIndex((s) => s.id === id);
+            if (index === -1) return state;
+
+            const duplicate = {
+              ...state.slides[index],
+              id: crypto.randomUUID(),
+              // Clone profond : sans ça, la copie partagerait le même objet `content` que
+              // l'originale, et modifier l'une modifierait l'autre par référence.
+              content: JSON.parse(JSON.stringify(state.slides[index].content || {})),
+            };
+            const newSlides = [...state.slides];
+            newSlides.splice(index + 1, 0, duplicate);
+
+            return {
+              ...pushHistory(state),
+              slides: newSlides,
+              activeSlideId: duplicate.id,
+            };
+          });
+        },
+
         removeSlide: (id) => {
           lastEdit = null;
           set((state) => {
