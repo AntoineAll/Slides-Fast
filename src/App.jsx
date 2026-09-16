@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Editor } from './components/Editor';
-import { Presentation } from './components/Presentation'; 
+import { Presentation } from './components/Presentation';
 import { PresenterMode } from './components/PresenterMode';
+import { OptionsMenu } from './components/OptionsMenu';
 import { useSlideStore } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
 import { validateImportedSlides } from './utils/validateImport';
@@ -284,6 +285,7 @@ function App({ isDisplayMode }) {
               Import
               <input type="file" className="hidden" accept=".json" onChange={handleImport} />
             </label>
+            <OptionsMenu slides={slides} />
 
             {autoSave.isSupported && (
               <>
