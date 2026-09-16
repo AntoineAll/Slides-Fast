@@ -4,6 +4,7 @@ import { Editor } from './components/Editor';
 import { Presentation } from './components/Presentation';
 import { PresenterMode } from './components/PresenterMode';
 import { OptionsMenu } from './components/OptionsMenu';
+import { SlideSorter } from './components/SlideSorter';
 import { useSlideStore } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
 import { validateImportedSlides } from './utils/validateImport';
@@ -30,7 +31,7 @@ function App({ isDisplayMode }) {
   // Protection contre la fermeture accidentelle de l'onglet/rafraîchissement global
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (mode === 'editor' && slides && slides.length > 0) {
+      if ((mode === 'editor' || mode === 'overview') && slides && slides.length > 0) {
         e.preventDefault();
         e.returnValue = ''; // Nécessaire pour déclencher l'alerte native du navigateur
       }
@@ -218,6 +219,11 @@ function App({ isDisplayMode }) {
     return <PresenterMode onExit={() => setMode('editor')} />;
   }
 
+  // 2bis. Vue d'ensemble (slide sorter)
+  if (mode === 'overview') {
+    return <SlideSorter onClose={() => setMode('editor')} />;
+  }
+
   // 3. Écran d'Accueil / Sélecteur de Presets
   if (mode === 'home') {
     return (
@@ -305,6 +311,13 @@ function App({ isDisplayMode }) {
               className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-700"
             >
               ↷
+            </button>
+            <button
+              onClick={() => setMode('overview')}
+              title="Vue d'ensemble de toutes les slides"
+              className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600"
+            >
+              Overview
             </button>
             <div className="w-px h-5 bg-gray-800 mx-1" />
             <button onClick={launchPresentation} className="bg-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-500">Lancer</button>
