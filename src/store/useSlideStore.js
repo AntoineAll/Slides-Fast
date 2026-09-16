@@ -27,6 +27,7 @@ export const useSlideStore = create(
         // Ajout de notes: '' par défaut
         slides: [{ id: 1, templateId: 'titre_image', content: { titre: 'Bienvenue', imageUrl: '' }, notes: '' }],
         activeSlideId: 1,
+        logoUrl: '',
         past: [],
         future: [],
 
@@ -92,6 +93,10 @@ export const useSlideStore = create(
         },
 
         setActiveSlideId: (id) => set({ activeSlideId: id }),
+
+        // Logo de la présentation (affiché en mode présentation) : un réglage global, pas
+        // du contenu de slide, donc volontairement hors de l'historique annuler/rétablir.
+        setLogoUrl: (logoUrl) => set({ logoUrl }),
 
         updateSlideContent: (id, newContent) => {
           const editKey = `content:${id}`;
@@ -166,7 +171,7 @@ export const useSlideStore = create(
     {
       name: 'slides-storage',
       // L'historique d'undo/redo ne doit pas être persisté ni gonfler le localStorage
-      partialize: (state) => ({ slides: state.slides, activeSlideId: state.activeSlideId }),
+      partialize: (state) => ({ slides: state.slides, activeSlideId: state.activeSlideId, logoUrl: state.logoUrl }),
     }
   )
 );

@@ -3,16 +3,22 @@ import { templates } from '../templates';
 const isPlainObject = (value) =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-// Valide et normalise un tableau de slides importé depuis un fichier JSON.
-// Renvoie soit { ok: true, slides } avec des slides prêtes pour le store,
-// soit { ok: false, errors } avec la liste de tout ce qui ne va pas.
+// Valide et normalise une présentation importée depuis un fichier JSON. Accepte deux
+// formats : un tableau de slides "brut" (ancien format, toujours supporté pour ne jamais
+// casser un fichier déjà sauvegardé) ou un objet { slides, logoUrl }.
+// Renvoie soit { ok: true, slides, logoUrl } prêt pour le store, soit { ok: false, errors }
+// avec la liste de tout ce qui ne va pas.
 export const validateImportedSlides = (data) => {
-  if (!Array.isArray(data) || data.length === 0) {
+  const isWrapped = isPlainObject(data) && Array.isArray(data.slides);
+  const rawSlides = isWrapped ? data.slides : data;
+  const logoUrl = isWrapped && typeof data.logoUrl === 'string' ? data.logoUrl : '';
+
+  if (!Array.isArray(rawSlides) || rawSlides.length === 0) {
     return { ok: false, errors: ["Le fichier doit contenir un tableau de slides non vide."] };
   }
 
   const errors = [];
-  const slides = data.map((slide, index) => {
+  const slides = rawSlides.map((slide, index) => {
     const label = `Slide ${index + 1}`;
 
     if (!isPlainObject(slide)) {
@@ -42,5 +48,5 @@ export const validateImportedSlides = (data) => {
     return { ok: false, errors };
   }
 
-  return { ok: true, slides };
+  return { ok: true, slides, logoUrl };
 };

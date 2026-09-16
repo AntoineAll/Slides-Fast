@@ -5,17 +5,17 @@ import { validateImportedSlides } from '../utils/validateImport';
 const WRITE_DEBOUNCE_MS = 1500;
 const JSON_FILE_TYPES = [{ description: 'JSON File', accept: { 'application/json': ['.json'] } }];
 
-const writeSlidesToHandle = async (handle, slides) => {
+const writeDocumentToHandle = async (handle, slides, logoUrl) => {
   const writable = await handle.createWritable();
-  await writable.write(JSON.stringify(slides, null, 2));
+  await writable.write(JSON.stringify({ slides, logoUrl }, null, 2));
   await writable.close();
 };
 
 // Sauvegarde continue de la présentation sur un vrai fichier disque, une fois lié.
 // status: 'unsupported' | 'unlinked' | 'needs-permission' | 'linked' | 'saving' | 'error'
-// onOpenExisting(slides) est appelé quand un fichier ouvert contient déjà une présentation valide,
-// pour la charger dans l'éditeur.
-export const useAutoSave = (slides, enabled, onOpenExisting) => {
+// onOpenExisting(slides, logoUrl) est appelé quand un fichier ouvert contient déjà une
+// présentation valide, pour la charger dans l'éditeur.
+export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
   const isSupported = typeof window !== 'undefined' && 'showOpenFilePicker' in window && 'showSaveFilePicker' in window;
   const [status, setStatus] = useState(isSupported ? 'unlinked' : 'unsupported');
   const [fileName, setFileName] = useState(null);
@@ -75,13 +75,13 @@ export const useAutoSave = (slides, enabled, onOpenExisting) => {
         alert(`Ce fichier ne ressemble pas à une présentation SlidesFast, il n'a pas été modifié :\n\n${result.errors.join('\n')}`);
         return;
       }
-      onOpenExisting?.(result.slides);
+      onOpenExisting?.(result.slides, result.logoUrl);
     } else {
-      await writeSlidesToHandle(handle, slides);
+      await writeDocumentToHandle(handle, slides, logoUrl);
     }
 
     await linkHandle(handle);
-  }, [slides, onOpenExisting, linkHandle]);
+  }, [slides, logoUrl, onOpenExisting, linkHandle]);
 
   // Créer un NOUVEAU fichier et y démarrer l'auto-save avec le contenu actuel de l'éditeur.
   const createNew = useCallback(async () => {
@@ -95,9 +95,9 @@ export const useAutoSave = (slides, enabled, onOpenExisting) => {
       if (err.name !== 'AbortError') console.error("Sélection du fichier impossible :", err);
       return;
     }
-    await writeSlidesToHandle(handle, slides);
+    await writeDocumentToHandle(handle, slides, logoUrl);
     await linkHandle(handle);
-  }, [slides, linkHandle]);
+  }, [slides, logoUrl, linkHandle]);
 
   // Le navigateur exige un geste utilisateur pour redemander la permission après un rechargement.
   const grantPermission = useCallback(async () => {
@@ -119,7 +119,7 @@ export const useAutoSave = (slides, enabled, onOpenExisting) => {
     const timer = setTimeout(async () => {
       try {
         setStatus('saving');
-        await writeSlidesToHandle(handleRef.current, slides);
+        await writeDocumentToHandle(handleRef.current, slides, logoUrl);
         setStatus('linked');
       } catch (err) {
         console.error("Échec de l'auto-save :", err);
@@ -128,7 +128,7 @@ export const useAutoSave = (slides, enabled, onOpenExisting) => {
     }, WRITE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slides, enabled]);
+  }, [slides, logoUrl, enabled]);
 
   return { isSupported, status, fileName, openExisting, createNew, grantPermission, unlink };
 };

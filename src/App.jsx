@@ -11,7 +11,7 @@ import { validateImportedSlides } from './utils/validateImport';
 import { useAutoSave } from './hooks/useAutoSave';
 
 function App({ isDisplayMode }) {
-  const { slides, activeSlideId, setSlides, setActiveSlideId, undo, redo, past, future } = useSlideStore();
+  const { slides, activeSlideId, logoUrl, setSlides, setActiveSlideId, setLogoUrl, undo, redo, past, future } = useSlideStore();
 
   const [mode, setMode] = useState(() => {
     if (isDisplayMode) return 'display';
@@ -21,12 +21,13 @@ function App({ isDisplayMode }) {
   // Remplace tout le document par un autre (preset, import, ouverture via auto-save) :
   // setSlides seul ne suffit pas, activeSlideId pointerait vers un id qui n'existe plus
   // dans les nouvelles slides (elles ont toutes de nouveaux id), et l'éditeur semblerait vide.
-  const loadNewDocument = useCallback((newSlides) => {
+  const loadNewDocument = useCallback((newSlides, newLogoUrl = '') => {
     setSlides(newSlides);
     setActiveSlideId(newSlides[0]?.id ?? null);
-  }, [setSlides, setActiveSlideId]);
+    setLogoUrl(newLogoUrl);
+  }, [setSlides, setActiveSlideId, setLogoUrl]);
 
-  const autoSave = useAutoSave(slides, mode === 'editor', loadNewDocument);
+  const autoSave = useAutoSave(slides, logoUrl, mode === 'editor', loadNewDocument);
 
   // Protection contre la fermeture accidentelle de l'onglet/rafraîchissement global
   useEffect(() => {
@@ -108,7 +109,7 @@ function App({ isDisplayMode }) {
   };
 
   const handleSave = async () => {
-    const data = JSON.stringify(slides, null, 2);
+    const data = JSON.stringify({ slides, logoUrl }, null, 2);
     try {
       const handle = await window.showSaveFilePicker({
         suggestedName: 'SlidesFast.json',
@@ -183,7 +184,7 @@ function App({ isDisplayMode }) {
       // Idem : on détache l'auto-save avant de charger ce nouveau document, pour ne pas
       // écraser l'ancien fichier lié avec le contenu qu'on vient d'importer.
       await autoSave.unlink();
-      loadNewDocument(result.slides);
+      loadNewDocument(result.slides, result.logoUrl);
       setMode('editor');
     };
     reader.readAsText(file);
@@ -326,7 +327,7 @@ function App({ isDisplayMode }) {
               Import
               <input type="file" className="hidden" accept=".json" onChange={handleImport} />
             </label>
-            <OptionsMenu slides={slides} />
+            <OptionsMenu slides={slides} logoUrl={logoUrl} onLogoChange={setLogoUrl} />
 
             {autoSave.isSupported && (
               <>
