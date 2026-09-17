@@ -12,15 +12,19 @@ const TemplateCard = ({ tmpl, isActive, onClick }) => {
   const Visual = tmpl.Visual;
 
   return (
-    <button
-      onClick={onClick}
-      className={`text-left rounded-xl border-2 p-2 transition ${
-        isActive ? 'border-blue-500 bg-blue-500/5' : 'border-transparent hover:border-gray-700'
-      }`}
-    >
-      {/* Le Visual garde sa mise en page réelle à taille normale (850x478), juste réduit
-          par un scale CSS : jamais déformé, toujours fidèle à ce que donnera la vraie slide. */}
-      <div style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT }} className="relative overflow-hidden rounded-lg bg-gray-950 shadow-md">
+    <button onClick={onClick} className="text-left w-full">
+      {/* La bordure est posée directement sur la boîte qui fait aussi le clip (overflow-hidden
+          + taille fixe), pas sur le bouton englobant : le cadre visible et la zone réellement
+          rognée sont ainsi garantis d'être exactement la même boîte, aucun risque que la
+          miniature déborde d'un cadre dessiné à côté sur un autre élément (ex: bouton étiré
+          par la grille). Le Visual garde sa mise en page réelle à taille normale (850x478),
+          juste réduit par un scale CSS : jamais déformé. */}
+      <div
+        style={{ width: THUMB_WIDTH, height: THUMB_HEIGHT, contain: 'layout paint' }}
+        className={`relative overflow-hidden rounded-lg bg-gray-950 shadow-md border-2 transition mx-auto ${
+          isActive ? 'border-blue-500' : 'border-gray-800 hover:border-gray-600'
+        }`}
+      >
         <div
           style={{ width: SLIDE_WIDTH, height: SLIDE_HEIGHT, transform: `scale(${THUMB_SCALE})`, transformOrigin: 'top left' }}
           className="absolute top-0 left-0 pointer-events-none"
@@ -28,7 +32,7 @@ const TemplateCard = ({ tmpl, isActive, onClick }) => {
           <Visual content={templatePreviewContent[tmpl.id]} />
         </div>
       </div>
-      <p className={`mt-2 px-0.5 text-xs font-medium truncate ${isActive ? 'text-blue-400' : 'text-gray-300'}`}>
+      <p className={`mt-2 px-0.5 text-xs font-medium truncate text-center ${isActive ? 'text-blue-400' : 'text-gray-300'}`}>
         {tmpl.name}
       </p>
     </button>

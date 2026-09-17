@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+/* Scrollbars discrètes, mais dans l'accent violet déjà utilisé ailleurs dans l'app (dégradés
+   de l'écran d'accueil, halos lumineux des templates...), plutôt que la scrollbar grise par
+   défaut du navigateur. scrollbar-width/scrollbar-color pour Firefox et les Chromium
+   récents, ::-webkit-scrollbar pour la compatibilité plus large. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7c3aed transparent; /* violet-600 */
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #7c3aed; /* violet-600 */
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #a78bfa; /* violet-400 */
+}
