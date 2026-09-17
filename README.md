@@ -43,10 +43,17 @@ npm run dev
 Autres commandes disponibles :
 
 ```bash
-npm run build     # build de production
-npm run preview   # prévisualiser le build de production
-npm run lint       # linter le code
+npm run build         # build de production
+npm run preview       # prévisualiser le build de production
+npm run lint           # linter le code
+npm run test           # tests automatisés (Vitest)
+npm run test:watch    # tests en mode watch
+npm run test:coverage # tests avec rapport de couverture
 ```
+
+## Tests
+
+La logique la plus sensible aux régressions silencieuses (fusion d'historique annuler/rétablir, validation d'import rétrocompatible, redimensionnement d'image sans déformation) est couverte par des tests unitaires [Vitest](https://vitest.dev/), qui s'intègre nativement à Vite. Une CI [GitHub Actions](.github/workflows/ci.yml) lance lint + tests + build à chaque push/PR sur `main`.
 
 ## État du projet
 
@@ -54,3 +61,4 @@ Projet en cours de développement actif. À ce stade :
 
 - Pas encore de design responsive (usage pensé pour un écran desktop).
 - Pensé et utilisé pour l'instant par un seul utilisateur en local — pas de collaboration ni de synchronisation multi-appareils.
+- Couverture de tests encore ciblée sur le store et les utilitaires critiques — pas (encore) de tests de composants React.

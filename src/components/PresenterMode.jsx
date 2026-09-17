@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSlideStore } from '../store/useSlideStore';
 import { templates } from '../templates';
 import { useContainerFitScale } from '../hooks/useContainerFitScale';

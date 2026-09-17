@@ -17,6 +17,17 @@ const loadImage = (src) =>
     img.src = src;
   });
 
+// Calcule les dimensions finales pour qu'aucun côté ne dépasse maxDimension, en appliquant
+// le même facteur d'échelle en largeur et en hauteur (jamais de redimensionnement
+// indépendant, qui déformerait l'image). scale === 1 signifie "pas de redimensionnement".
+export const computeScaledSize = (width, height, maxDimension) => {
+  const largestSide = Math.max(width, height);
+  if (largestSide <= maxDimension) return { width, height, scale: 1 };
+
+  const scale = maxDimension / largestSide;
+  return { width: Math.round(width * scale), height: Math.round(height * scale), scale };
+};
+
 // Convertit un fichier image local en data URL prête à être stockée dans le JSON de la
 // présentation. Les proportions ne sont jamais déformées : l'éventuel redimensionnement
 // applique le même facteur d'échelle en largeur et en hauteur. Le format d'origine (PNG,
@@ -36,14 +47,13 @@ export const fileToSlideImage = async (file) => {
   }
 
   const img = await loadImage(dataUrl);
-  const largestSide = Math.max(img.naturalWidth, img.naturalHeight);
-  if (largestSide <= MAX_DIMENSION) return dataUrl;
+  const { width, height, scale } = computeScaledSize(img.naturalWidth, img.naturalHeight, MAX_DIMENSION);
+  if (scale === 1) return dataUrl;
 
-  const scale = MAX_DIMENSION / largestSide;
   const canvas = document.createElement('canvas');
-  canvas.width = Math.round(img.naturalWidth * scale);
-  canvas.height = Math.round(img.naturalHeight * scale);
-  canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext('2d').drawImage(img, 0, 0, width, height);
 
   return canvas.toDataURL(file.type, RESIZE_QUALITY);
 };

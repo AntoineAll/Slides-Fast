@@ -9,39 +9,44 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
   // Calcul de la somme totale pour les calculs de proportion
   const total = parts.reduce((sum, p) => sum + Number(p.valeur || 0), 0);
 
-  // Génération des portions du diagramme circulaire en SVG
-  let cumulativePercent = 0;
-  const svgSlices = parts.map((part, index) => {
-    const value = Number(part.valeur || 0);
-    if (total === 0 || value === 0) return null;
+  // Génération des portions du diagramme circulaire en SVG. Le cumul des pourcentages est
+  // porté par l'accumulateur du reduce plutôt qu'une variable externe mutée pendant le
+  // render, qui serait recalculée de façon incohérente en cas de double-rendu (StrictMode).
+  const { slices: svgSlices } = parts.reduce(
+    (acc, part, index) => {
+      const value = Number(part.valeur || 0);
+      if (total === 0 || value === 0) return acc;
 
-    const percent = value / total;
-    const startPercent = cumulativePercent;
-    const endPercent = cumulativePercent + percent;
-    cumulativePercent += percent;
+      const startPercent = acc.cumulativePercent;
+      const percent = value / total;
+      const endPercent = startPercent + percent;
 
-    const [startX, startY] = [Math.cos(2 * Math.PI * startPercent), Math.sin(2 * Math.PI * startPercent)];
-    const [endX, endY] = [Math.cos(2 * Math.PI * endPercent), Math.sin(2 * Math.PI * endPercent)];
+      const [startX, startY] = [Math.cos(2 * Math.PI * startPercent), Math.sin(2 * Math.PI * startPercent)];
+      const [endX, endY] = [Math.cos(2 * Math.PI * endPercent), Math.sin(2 * Math.PI * endPercent)];
 
-    const largeArcFlag = percent > 0.5 ? 1 : 0;
+      const largeArcFlag = percent > 0.5 ? 1 : 0;
 
-    const pathData = [
-      `M 0 0`,
-      `L ${startX} ${startY}`,
-      `A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY}`,
-      `Z`
-    ].join(' ');
+      const pathData = [
+        `M 0 0`,
+        `L ${startX} ${startY}`,
+        `A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY}`,
+        `Z`
+      ].join(' ');
 
-    return (
-      <path
-        key={index}
-        d={pathData}
-        fill={part.couleur || '#3B82F6'}
-        stroke="#1F2937"
-        strokeWidth="0.02"
-      />
-    );
-  });
+      acc.slices.push(
+        <path
+          key={index}
+          d={pathData}
+          fill={part.couleur || '#3B82F6'}
+          stroke="#1F2937"
+          strokeWidth="0.02"
+        />
+      );
+      acc.cumulativePercent = endPercent;
+      return acc;
+    },
+    { slices: [], cumulativePercent: 0 }
+  );
 
   return (
     <div className="w-[850px] aspect-video bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl relative overflow-hidden flex-shrink-0">

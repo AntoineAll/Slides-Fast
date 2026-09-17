@@ -170,7 +170,7 @@ function App({ isDisplayMode }) {
       let data;
       try {
         data = JSON.parse(event.target.result);
-      } catch (error) {
+      } catch {
         alert("Erreur : ce fichier n'est pas un JSON valide.");
         return;
       }
@@ -205,7 +205,7 @@ function App({ isDisplayMode }) {
           setMode('presenter');
           return;
         }
-      } catch (e) { console.warn("Multi-écran indisponible"); }
+      } catch { console.warn("Multi-écran indisponible"); }
     }
     setMode('display');
   };
