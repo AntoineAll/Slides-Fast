@@ -203,7 +203,7 @@ const ListField = ({ field, value, onChange }) => {
               className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
             />
             {canRemove && (
-              <button type="button" onClick={() => removeItem(i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
+              <button type="button" onClick={() => removeItem(i)} aria-label="Supprimer cet élément" className="text-gray-500 hover:text-rose-500 px-1">✕</button>
             )}
           </div>
         ))}
@@ -263,7 +263,7 @@ const ObjectListField = ({ field, value, onChange }) => {
         {items.map((item, index) => (
           <div key={index} className="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-3 relative">
             {countMode === 'addRemove' && items.length > (field.min || 1) && (
-              <button type="button" onClick={() => removeItem(index)} className="absolute top-2 right-2 text-gray-600 hover:text-rose-500">✕</button>
+              <button type="button" onClick={() => removeItem(index)} aria-label="Supprimer cet élément" className="absolute top-2 right-2 text-gray-600 hover:text-rose-500">✕</button>
             )}
             {field.fields.map((sub) => (
               <FieldRenderer
@@ -315,7 +315,7 @@ const TwoColumnListField = ({ field, content, onChange }) => (
                   className="flex-1 bg-gray-800 border border-gray-700 text-white text-xs rounded p-2"
                   placeholder={col.itemPlaceholder || 'Élément...'}
                 />
-                <button type="button" onClick={() => removeItem(i)} className="text-gray-500 hover:text-rose-500 px-1">✕</button>
+                <button type="button" onClick={() => removeItem(i)} aria-label="Supprimer cet élément" className="text-gray-500 hover:text-rose-500 px-1">✕</button>
               </div>
             ))}
           </div>

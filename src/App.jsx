@@ -301,6 +301,7 @@ function App({ isDisplayMode }) {
               onClick={undo}
               disabled={past.length === 0}
               title="Annuler (Ctrl+Z)"
+              aria-label="Annuler"
               className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-700"
             >
               ↶
@@ -309,6 +310,7 @@ function App({ isDisplayMode }) {
               onClick={redo}
               disabled={future.length === 0}
               title="Rétablir (Ctrl+Shift+Z)"
+              aria-label="Rétablir"
               className="bg-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-700"
             >
               ↷
@@ -365,6 +367,7 @@ function App({ isDisplayMode }) {
                     <button
                       onClick={autoSave.unlink}
                       title="Désactiver l'auto-save"
+                      aria-label="Désactiver l'auto-save"
                       className="text-gray-500 hover:text-red-400 px-1"
                     >
                       ✕

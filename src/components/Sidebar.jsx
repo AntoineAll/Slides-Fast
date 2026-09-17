@@ -44,6 +44,7 @@ const SlideOptionsMenu = ({ onDuplicate }) => {
         ref={buttonRef}
         onClick={(e) => { e.stopPropagation(); isOpen ? setIsOpen(false) : openMenu(); }}
         title="Options de la slide"
+        aria-label="Options de la slide"
         className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700 transition"
       >
         ⋯
@@ -118,6 +119,7 @@ const SortableSlide = ({ slide, isActive, onClick, index, onDelete, onDuplicate 
           onClick={(e) => { e.stopPropagation(); onDelete(slide.id); }}
           className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-900/20 transition"
           title="Supprimer la slide"
+          aria-label="Supprimer la slide"
         >
           ×
         </button>

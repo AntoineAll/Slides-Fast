@@ -120,11 +120,11 @@ export const Editor = () => {
         ) : (
           <div className="flex-1 flex flex-col relative overflow-hidden bg-gray-950 rounded-2xl border border-gray-700/50 shadow-inner justify-center items-center">
             <div className="absolute top-4 right-4 bg-gray-900/90 border border-gray-700/80 p-2 rounded-xl flex items-center gap-1.5 shadow-xl z-10 backdrop-blur-sm">
-              <button onClick={handleZoomOut} className="w-8 h-8 text-lg font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition">-</button>
+              <button onClick={handleZoomOut} aria-label="Réduire le zoom" className="w-8 h-8 text-lg font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition">-</button>
               <button onClick={handleResetZoom} className="px-3 py-1.5 text-xs font-mono text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg min-w-[55px] text-center transition">
                 {Math.round(zoomLevel * 100)}%
               </button>
-              <button onClick={handleZoomIn} className="w-8 h-8 text-lg font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition">+</button>
+              <button onClick={handleZoomIn} aria-label="Agrandir le zoom" className="w-8 h-8 text-lg font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition">+</button>
             </div>
 
             <div

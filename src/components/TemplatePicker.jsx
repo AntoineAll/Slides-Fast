@@ -62,7 +62,7 @@ export const TemplatePicker = ({ currentTemplateId, onSelect, onClose }) => {
       >
         <header className="flex items-center justify-between px-6 py-4 border-b border-gray-800 flex-shrink-0">
           <h2 className="text-white font-semibold">Choisir un modèle</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition" title="Fermer (Échap)">
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition" title="Fermer (Échap)" aria-label="Fermer">
             ✕
           </button>
         </header>
