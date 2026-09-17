@@ -74,7 +74,7 @@ export const TemplatePicker = ({ currentTemplateId, onSelect, onClose }) => {
 
             return (
               <div key={category}>
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">{category}</h3>
+                <h3 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">{category}</h3>
                 <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${THUMB_WIDTH}px, 1fr))` }}>
                   {items.map((tmpl) => (
                     <TemplateCard

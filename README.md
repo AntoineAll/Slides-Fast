@@ -12,12 +12,14 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 
 - **11 modèles de slides** prêts à l'emploi : Titre & Image, Titre & Texte, Diagramme Circulaire, Comparatif Pros/Cons, Timeline/Roadmap, 3 Piliers/Valeurs, Mise en avant (Spotlight), Données & KPIs, 2 Colonnes, Liste Verticale Segmentée, Bento Grid.
 - **Presets de démarrage** (pitch deck, point hebdo, page blanche...) pour ne pas partir de zéro.
-- **Édition par formulaire** avec bascule vers un **aperçu visuel** zoomable.
-- **Images locales** : import direct depuis le disque (redimensionnées automatiquement si trop grandes, sans jamais déformer les proportions ni recompresser inutilement) ou via une URL externe, avec légende optionnelle sur le modèle Titre & Image.
-- **Réorganisation des slides** par glisser-déposer, **duplication** en un clic (menu "⋯" au survol) et suppression, dans la barre latérale.
+- **Édition par formulaire** avec bascule vers un **aperçu visuel** zoomable. Le choix du modèle se fait via un menu déroulant classé par catégorie, ou visuellement dans une grille où chaque modèle s'affiche avec son vrai rendu et un contenu d'exemple.
+- **Vue d'ensemble** ("slide sorter") : toutes les slides en miniature dans une grille, réorganisables par glisser-déposer, ouvrables en double-clic.
+- **Images locales** : import direct depuis le disque (redimensionnées automatiquement si trop grandes, sans jamais déformer les proportions ni recompresser inutilement) ou via une URL externe — sur les modèles Titre & Image (avec légende optionnelle), Mise en avant (Spotlight) et Bento Grid.
+- **Réorganisation des slides** par glisser-déposer, **duplication** en un clic (menu "⋯" au survol) et suppression, dans la barre latérale comme dans la vue d'ensemble.
 - **Navigation clavier** entre les slides (flèches) depuis l'éditeur, formulaire comme aperçu visuel.
 - **Annuler / Rétablir** (`Ctrl+Z`, `Ctrl+Shift+Z` ou `Ctrl+Y`), avec regroupement des frappes rapprochées pour ne pas avoir à annuler lettre par lettre.
 - **Mode présentateur** : notes par slide, aperçu de la slide suivante, prise en charge d'un second écran dédié à l'affichage public.
+- **Mode présentation** : numéro de la slide en cours et logo de la présentation (optionnel), affichés discrètement en coin d'écran.
 - **Export PDF** de la présentation entière (une page par slide), en plus du format `.json` natif.
 - **Sauvegarde locale** en `.json` (`Ctrl+S` ou bouton dédié), avec **import** validé — un fichier malformé ou un modèle inconnu est détecté et signalé clairement plutôt que de casser silencieusement la présentation.
 - **Auto-save sur fichier disque** (navigateurs compatibles File System Access) : ouvrir une présentation existante ou en créer une nouvelle, et la garder synchronisée en continu sur son fichier `.json`.
