@@ -1,5 +1,5 @@
-import { GenericForm } from './GenericForm';
-import { GenericNotes } from './GenericNotes';
+import { GenericForm } from '../GenericForm';
+import { GenericNotes } from '../GenericNotes';
 
 // Rendu visuel de la slide (Sections en colonnes compactes avec des polices optimisées)
 export const ListeVerticaleVisual = ({ content }) => {

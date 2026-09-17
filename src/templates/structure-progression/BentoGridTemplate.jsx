@@ -1,5 +1,5 @@
-import { GenericForm } from './GenericForm';
-import { GenericNotes } from './GenericNotes';
+import { GenericForm } from '../GenericForm';
+import { GenericNotes } from '../GenericNotes';
 
 // Rendu visuel de la slide (Style Bento Grid)
 export const BentoGridVisual = ({ content }) => {

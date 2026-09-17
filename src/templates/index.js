@@ -1,14 +1,14 @@
-import { TitreImageVisual, TitreImageForm, TitreImageNotes } from './TitreImageTemplate';
-import { TitreTexteVisual, TitreTexteForm, TitreTexteNotes } from './TitreTexteTemplate';
-import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm, DiagrammeCirculaireNotes } from './DiagrammeCirculaireTemplate';
-import { ComparatifVisual, ComparatifForm, ComparatifNotes } from './ComparatifTemplate';
-import { TimelineVisual, TimelineForm, TimelineNotes } from './TimelineTemplate';
-import { PiliersVisual, PiliersForm, PiliersNotes } from './PiliersTemplate';
-import { FocusVisual, FocusForm, FocusNotes } from './FocusTemplate';
-import { KpiVisual, KpiForm, KpiNotes } from './KpiTemplate';
-import { DeuxColonnesVisual, DeuxColonnesForm, DeuxColonnesNotes } from './DeuxColonnesTemplate';
-import { ListeVerticaleVisual, ListeVerticaleForm, ListeVerticaleNotes } from './ListeVerticaleTemplate';
-import { BentoGridVisual, BentoGridForm, BentoGridNotes } from './BentoGridTemplate';
+import { TitreImageVisual, TitreImageForm, TitreImageNotes } from './titre-message/TitreImageTemplate';
+import { TitreTexteVisual, TitreTexteForm, TitreTexteNotes } from './titre-message/TitreTexteTemplate';
+import { FocusVisual, FocusForm, FocusNotes } from './titre-message/FocusTemplate';
+import { DiagrammeCirculaireVisual, DiagrammeCirculaireForm, DiagrammeCirculaireNotes } from './donnees-chiffres/DiagrammeCirculaireTemplate';
+import { KpiVisual, KpiForm, KpiNotes } from './donnees-chiffres/KpiTemplate';
+import { ComparatifVisual, ComparatifForm, ComparatifNotes } from './comparaison/ComparatifTemplate';
+import { DeuxColonnesVisual, DeuxColonnesForm, DeuxColonnesNotes } from './comparaison/DeuxColonnesTemplate';
+import { TimelineVisual, TimelineForm, TimelineNotes } from './structure-progression/TimelineTemplate';
+import { PiliersVisual, PiliersForm, PiliersNotes } from './structure-progression/PiliersTemplate';
+import { BentoGridVisual, BentoGridForm, BentoGridNotes } from './structure-progression/BentoGridTemplate';
+import { ListeVerticaleVisual, ListeVerticaleForm, ListeVerticaleNotes } from './listes/ListeVerticaleTemplate';
 
 // Catégories utilisées pour regrouper les modèles dans le sélecteur (menu déroulant et
 // grille visuelle), pour qu'il soit plus rapide de trouver le bon type de slide.
