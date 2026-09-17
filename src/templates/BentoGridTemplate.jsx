@@ -30,12 +30,20 @@ export const BentoGridVisual = ({ content }) => {
         {cards.map((card, index) => (
           <div
             key={index}
-            className="bg-slate-900/50 hover:bg-slate-900/80 transition-all duration-300 border border-slate-800/80 hover:border-slate-700 rounded-xl p-5 flex flex-col justify-between relative group shadow-lg"
+            className="bg-slate-900/50 hover:bg-slate-900/80 transition-all duration-300 border border-slate-800/80 hover:border-slate-700 rounded-xl flex flex-col relative group shadow-lg overflow-hidden"
           >
             {/* Liseré lumineux au survol */}
             <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
-            <div>
+            {/* Image optionnelle en bandeau : object-cover pour remplir toute sa zone sans
+                jamais déformer les proportions (elle est rognée plutôt qu'étirée si besoin) */}
+            {card.imageUrl && (
+              <div className="h-20 flex-shrink-0">
+                <img src={card.imageUrl} alt="" className="w-full h-full object-cover" />
+              </div>
+            )}
+
+            <div className="p-5 flex-1">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800/40 px-2 py-0.5 rounded">
                   {card.tag || `0${index + 1}`}
@@ -69,6 +77,7 @@ const fields = [
       { key: 'tag', type: 'text', label: null, placeholder: 'Tag' },
       { key: 'titre', type: 'text', label: null, placeholder: 'Titre de la carte...' },
       { key: 'description', type: 'textarea', label: null, placeholder: 'Description détaillée...' },
+      { key: 'imageUrl', type: 'image', label: 'Image (optionnel)', placeholder: 'https://exemple.com/image.jpg' },
     ],
   },
 ];

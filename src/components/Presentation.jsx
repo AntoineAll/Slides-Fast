@@ -29,10 +29,15 @@ export const Presentation = ({ onExit }) => {
 
   if (!slides.length) return null;
 
+  // En JSX plutôt qu'appelé comme une fonction : plus idiomatique, et surtout plus fiable
+  // avec le Hot Module Replacement de Vite (un appel direct peut afficher une version
+  // obsolète du template après une édition, jusqu'à un rechargement complet de la page).
+  const Visual = templates[slides[currentIndex].templateId]?.Visual;
+
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
       <div style={{ transform: `scale(${scale})` }}>
-        {templates[slides[currentIndex].templateId]?.Visual({ content: slides[currentIndex].content })}
+        {Visual && <Visual content={slides[currentIndex].content} />}
       </div>
       {/* Bouton de sortie propre pour ceux qui ne veulent pas utiliser Echap */}
       <button

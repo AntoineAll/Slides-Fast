@@ -5,9 +5,15 @@ import { GenericNotes } from './GenericNotes';
 export const FocusVisual = ({ content }) => {
   return (
     <div className="w-[850px] h-[478px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl flex relative overflow-hidden flex-shrink-0 box-border">
-      {/* Côté gauche : Zone visuelle forte */}
-      <div className="w-1/3 bg-blue-600 flex items-center justify-center p-8 relative">
-        <div className="text-8xl">{content?.icone || '💡'}</div>
+      {/* Côté gauche : Zone visuelle forte. Avec une image, elle remplit tout le panneau
+          (object-cover : rognée si besoin, jamais étirée) ; sans image, l'icône emoji reste
+          affichée comme avant. */}
+      <div className="w-1/3 bg-blue-600 flex items-center justify-center p-8 relative overflow-hidden">
+        {content?.imageUrl ? (
+          <img src={content.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        ) : (
+          <div className="text-8xl">{content?.icone || '💡'}</div>
+        )}
       </div>
 
       {/* Côté droit : Contenu textuel */}
@@ -24,7 +30,8 @@ export const FocusVisual = ({ content }) => {
 };
 
 const fields = [
-  { key: 'icone', type: 'emojiPicker', label: 'Choisir un icône', defaultValue: '💡' },
+  { key: 'icone', type: 'emojiPicker', label: 'Icône (utilisée si aucune image)', defaultValue: '💡' },
+  { key: 'imageUrl', type: 'image', label: "Image (remplace l'icône)", placeholder: 'https://exemple.com/image.jpg' },
   { key: 'titre', type: 'text', label: 'Titre', placeholder: 'Ex: Stratégie Clé' },
   { key: 'desc', type: 'textarea', label: 'Description', placeholder: 'Détails importants...', rows: 4 },
 ];

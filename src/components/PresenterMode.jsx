@@ -26,15 +26,20 @@ export const PresenterMode = ({ onExit }) => {
   const currentSlide = slides[currentIndex];
   const nextSlide = slides[currentIndex + 1];
 
-  // Récupération dynamique du composant Notes basé sur le templateId
+  // Récupération dynamique des composants basée sur le templateId. En JSX plutôt qu'appelés
+  // comme des fonctions : plus fiable avec le Hot Module Replacement de Vite (un appel direct
+  // peut afficher une version obsolète du template après une édition, jusqu'à un
+  // rechargement complet de la page).
   const NotesComponent = templates[currentSlide?.templateId]?.Notes;
+  const CurrentVisual = templates[currentSlide?.templateId]?.Visual;
+  const NextVisual = templates[nextSlide?.templateId]?.Visual;
 
   return (
     <div className="fixed inset-0 bg-gray-950 text-white p-6 grid grid-cols-3 gap-6">
       <div className="col-span-2 flex flex-col gap-4">
         <h2 className="text-xl font-bold">Slide Actuelle</h2>
         <div className="flex-1 bg-black rounded-xl overflow-hidden border border-gray-700 flex items-center justify-center">
-           {templates[currentSlide?.templateId]?.Visual({ content: currentSlide.content })}
+           {CurrentVisual && <CurrentVisual content={currentSlide.content} />}
         </div>
         
         {/* Affichage du composant Notes dynamique */}
@@ -53,7 +58,7 @@ export const PresenterMode = ({ onExit }) => {
           <div className="w-full aspect-video bg-black rounded-lg border border-gray-700 overflow-hidden relative">
             {nextSlide ? (
               <div className="absolute top-0 left-0 origin-top-left" style={{ transform: 'scale(0.60)', width: '850px', height: '478px' }}>
-                {templates[nextSlide.templateId]?.Visual({ content: nextSlide.content })}
+                {NextVisual && <NextVisual content={nextSlide.content} />}
               </div>
             ) : <div className="flex items-center justify-center h-full text-gray-600">Fin</div>}
           </div>
