@@ -108,7 +108,7 @@ function App({ isDisplayMode }) {
     setMode('editor');
   };
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     const data = JSON.stringify({ slides, logoUrl }, null, 2);
     try {
       const handle = await window.showSaveFilePicker({
@@ -131,7 +131,7 @@ function App({ isDisplayMode }) {
       }
       return false; // Annulé par l'utilisateur
     }
-  };
+  }, [slides, logoUrl]);
 
   // Raccourci clavier Ctrl/Cmd+S : sauvegarde locale au lieu de la boîte "Enregistrer la page" du navigateur
   useEffect(() => {
