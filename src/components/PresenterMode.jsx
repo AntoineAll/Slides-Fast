@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSlideStore } from '../store/useSlideStore';
 import { templates } from '../templates';
+import { useContainerFitScale } from '../hooks/useContainerFitScale';
+import { PresenterTimer } from './PresenterTimer';
 
 const channel = new BroadcastChannel('slide_sync');
 
 export const PresenterMode = ({ onExit }) => {
   const { slides } = useSlideStore();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const currentSlideBoxRef = useRef(null);
+  // Le panneau "Slide Actuelle" ne fait pas toute la fenêtre (il partage l'espace avec les
+  // notes et l'aperçu suivant) : on adapte le zoom à SA taille, pas à celle de l'écran.
+  const currentSlideScale = useContainerFitScale(currentSlideBoxRef, 850, 478);
 
   const changeSlide = (newIndex) => {
     setCurrentIndex(newIndex);
@@ -38,8 +44,10 @@ export const PresenterMode = ({ onExit }) => {
     <div className="fixed inset-0 bg-gray-950 text-white p-6 grid grid-cols-3 gap-6">
       <div className="col-span-2 flex flex-col gap-4">
         <h2 className="text-xl font-bold">Slide Actuelle</h2>
-        <div className="flex-1 bg-black rounded-xl overflow-hidden border border-gray-700 flex items-center justify-center">
-           {CurrentVisual && <CurrentVisual content={currentSlide.content} />}
+        <div ref={currentSlideBoxRef} className="flex-1 bg-black rounded-xl overflow-hidden border border-gray-700 flex items-center justify-center">
+           <div style={{ transform: `scale(${currentSlideScale})` }}>
+             {CurrentVisual && <CurrentVisual content={currentSlide.content} />}
+           </div>
         </div>
         
         {/* Affichage du composant Notes dynamique */}
@@ -63,6 +71,7 @@ export const PresenterMode = ({ onExit }) => {
             ) : <div className="flex items-center justify-center h-full text-gray-600">Fin</div>}
           </div>
         </div>
+        <PresenterTimer />
         <button onClick={onExit} className="mt-auto bg-red-600 py-3 rounded-lg hover:bg-red-500">Quitter</button>
       </div>
     </div>
