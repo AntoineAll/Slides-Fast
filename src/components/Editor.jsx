@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useSlideStore } from '../store/useSlideStore';
-import { templates, templateList } from '../templates';
+import { templates, templateList, templateCategories } from '../templates';
+import { TemplatePicker } from './TemplatePicker';
 
 export const Editor = () => {
   const { slides, activeSlideId, updateSlideContent, updateSlideTemplate } = useSlideStore();
-  const [activeTab, setActiveTab] = useState('visual'); 
-  const [zoomLevel, setZoomLevel] = useState(1); 
+  const [activeTab, setActiveTab] = useState('visual');
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const activeSlide = slides.find((s) => s.id === activeSlideId);
 
@@ -67,18 +69,42 @@ export const Editor = () => {
           <div className="max-w-xl mx-auto w-full bg-gray-900 p-6 rounded-xl border border-gray-700 space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Changer de modèle visuel</label>
-              <select
-                value={activeSlide.templateId} // CORRECTION ICI
-                onChange={(e) => updateSlideTemplate(activeSlide.id, e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
-              >
-                {templateList.map((tmpl) => (
-                  <option key={tmpl.id} value={tmpl.id}>
-                    {tmpl.name}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-2">
+                <select
+                  value={activeSlide.templateId} // CORRECTION ICI
+                  onChange={(e) => updateSlideTemplate(activeSlide.id, e.target.value)}
+                  className="flex-1 min-w-0 bg-gray-800 border border-gray-700 text-white rounded-lg p-3 focus:outline-none focus:border-blue-500"
+                >
+                  {templateCategories.map((category) => (
+                    <optgroup key={category} label={category}>
+                      {templateList
+                        .filter((tmpl) => tmpl.category === category)
+                        .map((tmpl) => (
+                          <option key={tmpl.id} value={tmpl.id}>
+                            {tmpl.name}
+                          </option>
+                        ))}
+                    </optgroup>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() => setIsPickerOpen(true)}
+                  title="Choisir visuellement un modèle"
+                  className="flex-shrink-0 bg-gray-800 border border-gray-700 text-gray-300 hover:text-white hover:border-blue-500 rounded-lg px-3 transition"
+                >
+                  🖼️
+                </button>
+              </div>
             </div>
+
+            {isPickerOpen && (
+              <TemplatePicker
+                currentTemplateId={activeSlide.templateId}
+                onSelect={(templateId) => updateSlideTemplate(activeSlide.id, templateId)}
+                onClose={() => setIsPickerOpen(false)}
+              />
+            )}
 
             <div className="border-t border-gray-800 pt-4">
               {ActiveTemplateForm ? (
