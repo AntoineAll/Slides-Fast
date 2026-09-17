@@ -4,7 +4,7 @@ import { GenericNotes } from '../GenericNotes';
 // Rendu visuel de la slide (Focus / Spotlight)
 export const FocusVisual = ({ content }) => {
   return (
-    <div className="w-[850px] h-[478px] bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl flex relative overflow-hidden flex-shrink-0 box-border">
+    <div className="w-[850px] h-[478px] bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl flex relative overflow-hidden flex-shrink-0 box-border">
       {/* Côté gauche : Zone visuelle forte. Avec une image, elle remplit tout le panneau
           (object-cover : rognée si besoin, jamais étirée) ; sans image, l'icône emoji reste
           affichée comme avant. */}

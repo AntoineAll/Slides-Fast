@@ -44,63 +44,69 @@ export const DiagrammeCirculaireVisual = ({ content }) => {
   });
 
   return (
-    <div className="w-[850px] aspect-video bg-gray-900 rounded-2xl border-2 border-gray-700 shadow-2xl flex flex-col justify-between p-8 relative overflow-hidden flex-shrink-0">
-      {/* Titre en haut */}
-      <h3 className="text-4xl font-extrabold text-white text-center tracking-tight break-words max-w-full">
-        {content?.titre || 'Aucun titre'}
-      </h3>
+    <div className="w-[850px] aspect-video bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl relative overflow-hidden flex-shrink-0">
+      {/* Effet lumineux de fond subtil, cohérent avec Bento Grid */}
+      <div className="absolute -top-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Contenu : Diagramme à gauche, Légende à droite */}
-      <div className="flex-1 flex items-center justify-around px-4">
-        {/* Diagramme Circulaire (SVG centré) */}
-        <div className="w-[320px] h-[320px] flex items-center justify-center">
-          {parts.length > 0 && total > 0 ? (
-            <svg viewBox="-1.1 -1.1 2.2 2.2" className="w-full h-full transform -rotate-90">
-              {svgSlices}
-              <circle cx="0" cy="0" r="0.45" fill="#111827" />
-            </svg>
-          ) : (
-            <div className="text-gray-500 italic text-center text-sm">
-              Ajoutez des parts avec des valeurs &gt; 0
-            </div>
-          )}
-        </div>
+      <div className="relative z-10 h-full w-full flex flex-col justify-between p-8">
+        {/* Titre en haut */}
+        <h3 className="text-4xl font-extrabold text-white text-center tracking-tight break-words max-w-full">
+          {content?.titre || 'Aucun titre'}
+        </h3>
 
-        {/* Légende (à droite) */}
-        <div className="w-[300px] bg-gray-950/40 border border-gray-800 p-4 rounded-xl max-h-[280px] overflow-y-auto space-y-3">
-          <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">
-            Répartition :
-          </h4>
-          {parts.length > 0 ? (
-            parts.map((part, index) => {
-              const value = Number(part.valeur || 0);
-              const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+        {/* Contenu : Diagramme à gauche, Légende à droite */}
+        <div className="flex-1 flex items-center justify-around px-4">
+          {/* Diagramme Circulaire (SVG centré) */}
+          <div className="w-[320px] h-[320px] flex items-center justify-center">
+            {parts.length > 0 && total > 0 ? (
+              <svg viewBox="-1.1 -1.1 2.2 2.2" className="w-full h-full transform -rotate-90">
+                {svgSlices}
+                <circle cx="0" cy="0" r="0.45" fill="#111827" />
+              </svg>
+            ) : (
+              <div className="text-gray-500 italic text-center text-sm">
+                Ajoutez des parts avec des valeurs &gt; 0
+              </div>
+            )}
+          </div>
 
-              // Affichage conditionnel selon l'unité choisie
-              const displayValue = unite === 'pourcentage'
-                ? `${percentage}%`
-                : `${value} (${percentage}%)`;
+          {/* Légende (à droite) */}
+          <div className="w-[300px] bg-gray-950/40 border border-gray-800 p-4 rounded-xl max-h-[280px] overflow-y-auto space-y-3">
+            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">
+              Répartition :
+            </h4>
+            {parts.length > 0 ? (
+              parts.map((part, index) => {
+                const value = Number(part.valeur || 0);
+                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
 
-              return (
-                <div key={index} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2 overflow-hidden pr-2">
-                    <span
-                      className="w-3.5 h-3.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: part.couleur || '#3B82F6' }}
-                    />
-                    <span className="text-white font-medium truncate" title={part.label || `Part ${index + 1}`}>
-                      {part.label || `Part ${index + 1}`}
+                // Affichage conditionnel selon l'unité choisie
+                const displayValue = unite === 'pourcentage'
+                  ? `${percentage}%`
+                  : `${value} (${percentage}%)`;
+
+                return (
+                  <div key={index} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2 overflow-hidden pr-2">
+                      <span
+                        className="w-3.5 h-3.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: part.couleur || '#3B82F6' }}
+                      />
+                      <span className="text-white font-medium truncate" title={part.label || `Part ${index + 1}`}>
+                        {part.label || `Part ${index + 1}`}
+                      </span>
+                    </div>
+                    <span className="text-white font-medium text-xs">
+                      {displayValue}
                     </span>
                   </div>
-                  <span className="text-white font-medium text-xs">
-                    {displayValue}
-                  </span>
-                </div>
-              );
-            })
-          ) : (
-            <div className="text-gray-600 text-xs italic">Aucune part définie</div>
-          )}
+                );
+              })
+            ) : (
+              <div className="text-gray-600 text-xs italic">Aucune part définie</div>
+            )}
+          </div>
         </div>
       </div>
     </div>
