@@ -9,26 +9,26 @@ export const DeuxColonnesVisual = ({ content }) => {
   return (
     <div className="w-[850px] aspect-video bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl relative overflow-hidden flex-shrink-0">
       {/* Effet lumineux de fond subtil, cohérent avec Bento Grid */}
-      <div className="absolute -top-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-64 h-64 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[var(--accent-secondary)]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 h-full w-full flex flex-col p-10">
         {/* Titre de la slide */}
-        <h3 className="text-4xl font-extrabold text-white text-center mb-8 tracking-tight break-words max-w-full">
+        <h3 className="text-4xl font-extrabold text-[var(--accent-title)] text-center mb-8 tracking-tight break-words max-w-full">
           {content?.titre || 'Vue d\'ensemble'}
         </h3>
 
         <div className="flex-1 flex gap-8">
           {/* Colonne Gauche */}
           <div className="flex-1 bg-gray-800/40 border border-gray-700/60 rounded-2xl p-6 flex flex-col">
-            <h4 className="text-blue-400 font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
-              <span className="w-6 h-6 bg-blue-600/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-xs">🔹</span>
+            <h4 className="text-[var(--accent-primary)] font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
+              <span className="w-6 h-6 bg-[var(--accent-primary)]/20 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] rounded-full flex items-center justify-center text-xs">🔹</span>
               {colG.titre}
             </h4>
             <ul className="space-y-3">
               {colG.items.map((item, i) => (
                 <li key={i} className="text-gray-200 text-sm flex items-start gap-3">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[var(--accent-primary)] mt-1">•</span>
                   <span className="break-words">{item || '...'}</span>
                 </li>
               ))}
@@ -37,14 +37,14 @@ export const DeuxColonnesVisual = ({ content }) => {
 
           {/* Colonne Droite */}
           <div className="flex-1 bg-gray-800/40 border border-gray-700/60 rounded-2xl p-6 flex flex-col">
-            <h4 className="text-blue-400 font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
-              <span className="w-6 h-6 bg-blue-600/20 border border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-xs">🔹</span>
+            <h4 className="text-[var(--accent-primary)] font-bold text-xl mb-4 flex items-center gap-2 border-b border-gray-700 pb-2">
+              <span className="w-6 h-6 bg-[var(--accent-primary)]/20 border border-[var(--accent-primary)]/30 text-[var(--accent-primary)] rounded-full flex items-center justify-center text-xs">🔹</span>
               {colD.titre}
             </h4>
             <ul className="space-y-3">
               {colD.items.map((item, i) => (
                 <li key={i} className="text-gray-200 text-sm flex items-start gap-3">
-                  <span className="text-blue-500 mt-1">•</span>
+                  <span className="text-[var(--accent-primary)] mt-1">•</span>
                   <span className="break-words">{item || '...'}</span>
                 </li>
               ))}
@@ -68,7 +68,7 @@ const fields = [
         titlePlaceholder: 'Titre Colonne 1',
         itemPlaceholder: 'Élément...',
         containerClass: 'bg-gray-900/60 border-gray-800',
-        titleClass: 'text-blue-400',
+        titleClass: 'text-[var(--accent-primary)]',
         addClass: 'border-gray-700 text-gray-400 hover:text-white',
       },
       {
@@ -77,7 +77,7 @@ const fields = [
         titlePlaceholder: 'Titre Colonne 2',
         itemPlaceholder: 'Élément...',
         containerClass: 'bg-gray-900/60 border-gray-800',
-        titleClass: 'text-blue-400',
+        titleClass: 'text-[var(--accent-primary)]',
         addClass: 'border-gray-700 text-gray-400 hover:text-white',
       },
     ],

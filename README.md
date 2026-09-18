@@ -20,6 +20,7 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 - **Annuler / Rétablir** (`Ctrl+Z`, `Ctrl+Shift+Z` ou `Ctrl+Y`), avec regroupement des frappes rapprochées pour ne pas avoir à annuler lettre par lettre.
 - **Mode présentateur** : notes par slide, aperçu de la slide suivante, prise en charge d'un second écran dédié à l'affichage public.
 - **Mode présentation** : numéro de la slide en cours et logo de la présentation (optionnel), affichés discrètement en coin d'écran.
+- **Thème de couleur d'accent** : au choix, le thème par défaut (bleu/cyan) ou des couleurs principale, secondaire et de titre personnalisées, appliquées instantanément à tous les modèles (boutons, textes, halos décoratifs, titre de slide).
 - **Export PDF** de la présentation entière (une page par slide), en plus du format `.json` natif.
 - **Sauvegarde locale** en `.json` (`Ctrl+S` ou bouton dédié), avec **import** validé — un fichier malformé ou un modèle inconnu est détecté et signalé clairement plutôt que de casser silencieusement la présentation.
 - **Auto-save sur fichier disque** (navigateurs compatibles File System Access) : ouvrir une présentation existante ou en créer une nouvelle, et la garder synchronisée en continu sur son fichier `.json`.

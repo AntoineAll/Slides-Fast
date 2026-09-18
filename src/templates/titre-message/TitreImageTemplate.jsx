@@ -5,13 +5,13 @@ import { GenericNotes } from '../GenericNotes';
 export const TitreImageVisual = ({ content }) => (
   <div className="w-[850px] aspect-video bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl relative overflow-hidden flex-shrink-0">
     {/* Effet lumineux de fond subtil, cohérent avec Bento Grid */}
-    <div className="absolute -top-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-    <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="absolute -top-32 -left-32 w-64 h-64 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[var(--accent-secondary)]/10 rounded-full blur-3xl pointer-events-none" />
 
     {/* z-10 : les halos sont en position absolue donc au-dessus du contenu normal par défaut
         (règles d'empilement CSS), il faut le relever explicitement pour rester lisible. */}
     <div className="relative z-10 h-full w-full flex flex-col items-center justify-center p-8">
-      <h3 className="text-4xl font-extrabold text-white mb-8 text-center break-words max-w-full tracking-tight">
+      <h3 className="text-4xl font-extrabold text-[var(--accent-title)] mb-8 text-center break-words max-w-full tracking-tight">
         {content?.titre || 'Aucun titre'}
       </h3>
 

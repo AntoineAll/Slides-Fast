@@ -4,6 +4,12 @@ import { persist } from 'zustand/middleware';
 const HISTORY_LIMIT = 50;
 const MERGE_WINDOW_MS = 800; // frappes rapprochées sur le même champ = une seule entrée d'historique
 
+// Couleurs d'accent par défaut (celles déjà utilisées historiquement dans les modèles :
+// bleu pour les boutons/icônes/textes, cyan pour le second halo lumineux, blanc pour le
+// titre principal de chaque slide). Exportée pour que useAccentTheme et OptionsMenu
+// partagent la même référence.
+export const DEFAULT_THEME = { mode: 'default', primary: '#3b82f6', secondary: '#06b6d4', title: '#ffffff' };
+
 export const useSlideStore = create(
   persist(
     (set) => {
@@ -28,6 +34,7 @@ export const useSlideStore = create(
         slides: [{ id: 1, templateId: 'titre_image', content: { titre: 'Bienvenue', imageUrl: '' }, notes: '' }],
         activeSlideId: 1,
         logoUrl: '',
+        theme: DEFAULT_THEME,
         past: [],
         future: [],
 
@@ -97,6 +104,9 @@ export const useSlideStore = create(
         // Logo de la présentation (affiché en mode présentation) : un réglage global, pas
         // du contenu de slide, donc volontairement hors de l'historique annuler/rétablir.
         setLogoUrl: (logoUrl) => set({ logoUrl }),
+
+        // Thème de couleur d'accent (mêmes raisons qu'au-dessus : réglage global, pas de slide).
+        setTheme: (theme) => set({ theme }),
 
         updateSlideContent: (id, newContent) => {
           const editKey = `content:${id}`;
@@ -171,7 +181,7 @@ export const useSlideStore = create(
     {
       name: 'slides-storage',
       // L'historique d'undo/redo ne doit pas être persisté ni gonfler le localStorage
-      partialize: (state) => ({ slides: state.slides, activeSlideId: state.activeSlideId, logoUrl: state.logoUrl }),
+      partialize: (state) => ({ slides: state.slides, activeSlideId: state.activeSlideId, logoUrl: state.logoUrl, theme: state.theme }),
     }
   )
 );

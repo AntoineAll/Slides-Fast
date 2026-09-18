@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateImportedSlides } from './validateImport';
+import { DEFAULT_THEME } from '../store/useSlideStore';
 
 // Deux modèles réels du projet, pour rester représentatif sans dépendre de tous les templates.
 const VALID_TEMPLATE_A = 'titre_image';
@@ -22,6 +23,45 @@ describe('validateImportedSlides — formats acceptés', () => {
     });
     expect(result.ok).toBe(true);
     expect(result.logoUrl).toBe('data:image/png;base64,xxx');
+  });
+
+  it('accepte un thème personnalisé valide', () => {
+    const theme = { mode: 'custom', primary: '#ff0000', secondary: '#00ff00', title: '#111111' };
+    const result = validateImportedSlides({
+      slides: [{ templateId: VALID_TEMPLATE_A }],
+      theme,
+    });
+    expect(result.ok).toBe(true);
+    expect(result.theme).toEqual(theme);
+  });
+
+  it('complète avec le blanc par défaut un thème exporté avant l\'ajout de la couleur de titre', () => {
+    const theme = { mode: 'custom', primary: '#ff0000', secondary: '#00ff00' }; // pas de title
+    const result = validateImportedSlides({
+      slides: [{ templateId: VALID_TEMPLATE_A }],
+      theme,
+    });
+    expect(result.ok).toBe(true);
+    expect(result.theme).toEqual({ ...theme, title: DEFAULT_THEME.title });
+  });
+
+  it('retombe sur le thème par défaut si aucun thème n\'est fourni', () => {
+    const result = validateImportedSlides({ slides: [{ templateId: VALID_TEMPLATE_A }] });
+    expect(result.theme).toEqual(DEFAULT_THEME);
+  });
+
+  it('retombe sur le thème par défaut si le thème fourni est malformé', () => {
+    const result = validateImportedSlides({
+      slides: [{ templateId: VALID_TEMPLATE_A }],
+      theme: { mode: 'custom', primary: '#ff0000' }, // secondary manquant
+    });
+    expect(result.ok).toBe(true);
+    expect(result.theme).toEqual(DEFAULT_THEME);
+  });
+
+  it('retombe sur le thème par défaut pour l\'ancien format (tableau brut)', () => {
+    const result = validateImportedSlides([{ templateId: VALID_TEMPLATE_A }]);
+    expect(result.theme).toEqual(DEFAULT_THEME);
   });
 
   it('ignore un logoUrl qui n\'est pas une chaîne', () => {

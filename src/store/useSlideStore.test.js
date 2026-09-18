@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { useSlideStore } from './useSlideStore';
+import { useSlideStore, DEFAULT_THEME } from './useSlideStore';
 
 const makeInitialSlides = () => [
   { id: 'slide-1', templateId: 'titre_image', content: { titre: 'Un' }, notes: '' },
@@ -11,7 +11,7 @@ const makeInitialSlides = () => [
 // fusion d'historique, sans écraser les actions du store.
 const resetStore = () => {
   useSlideStore.getState().setSlides(makeInitialSlides());
-  useSlideStore.setState({ activeSlideId: 'slide-1', past: [], future: [], logoUrl: '' });
+  useSlideStore.setState({ activeSlideId: 'slide-1', past: [], future: [], logoUrl: '', theme: DEFAULT_THEME });
 };
 
 beforeEach(() => {
@@ -196,6 +196,20 @@ describe('logoUrl', () => {
     useSlideStore.getState().setLogoUrl('data:image/png;base64,xxx');
     const state = useSlideStore.getState();
     expect(state.logoUrl).toBe('data:image/png;base64,xxx');
+    expect(state.past).toHaveLength(0);
+  });
+});
+
+describe('theme', () => {
+  it('démarre avec le thème par défaut', () => {
+    expect(useSlideStore.getState().theme).toEqual(DEFAULT_THEME);
+  });
+
+  it('setTheme met à jour le thème sans toucher à l\'historique annuler/rétablir', () => {
+    const customTheme = { mode: 'custom', primary: '#ff0000', secondary: '#00ff00' };
+    useSlideStore.getState().setTheme(customTheme);
+    const state = useSlideStore.getState();
+    expect(state.theme).toEqual(customTheme);
     expect(state.past).toHaveLength(0);
   });
 });

@@ -11,12 +11,12 @@ export const TimelineVisual = ({ content }) => {
   return (
     <div className="w-[850px] aspect-video bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl relative overflow-hidden flex-shrink-0">
       {/* Effet lumineux de fond subtil, cohérent avec Bento Grid */}
-      <div className="absolute -top-32 -left-32 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 -left-32 w-64 h-64 bg-[var(--accent-primary)]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[var(--accent-secondary)]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 h-full w-full flex flex-col p-12">
         {/* Titre de la slide */}
-        <h3 className="text-4xl font-extrabold text-white text-center mb-16 tracking-tight">
+        <h3 className="text-4xl font-extrabold text-[var(--accent-title)] text-center mb-16 tracking-tight">
           {content?.titre || 'Feuille de route'}
         </h3>
 
@@ -29,12 +29,12 @@ export const TimelineVisual = ({ content }) => {
             {steps.map((step, i) => (
               <div key={i} className="flex flex-col items-center group" style={{ width: `${100 / steps.length}%` }}>
                 {/* Date / Label en haut */}
-                <div className="mb-4 text-blue-400 font-mono text-sm font-bold bg-slate-950 px-2">
+                <div className="mb-4 text-[var(--accent-primary)] font-mono text-sm font-bold bg-slate-950 px-2">
                   {step.date || 'Etape ' + (i + 1)}
                 </div>
 
                 {/* Le point sur la ligne */}
-                <div className="w-6 h-6 bg-blue-600 border-4 border-slate-950 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)] mb-4"></div>
+                <div className="w-6 h-6 bg-[var(--accent-primary)] border-4 border-slate-950 rounded-full shadow-[0_0_15px_var(--accent-primary)] mb-4"></div>
 
                 {/* Titre et description en bas */}
                 <div className="text-center px-2">

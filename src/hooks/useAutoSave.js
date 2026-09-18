@@ -5,17 +5,17 @@ import { validateImportedSlides } from '../utils/validateImport';
 const WRITE_DEBOUNCE_MS = 1500;
 const JSON_FILE_TYPES = [{ description: 'JSON File', accept: { 'application/json': ['.json'] } }];
 
-const writeDocumentToHandle = async (handle, slides, logoUrl) => {
+const writeDocumentToHandle = async (handle, slides, logoUrl, theme) => {
   const writable = await handle.createWritable();
-  await writable.write(JSON.stringify({ slides, logoUrl }, null, 2));
+  await writable.write(JSON.stringify({ slides, logoUrl, theme }, null, 2));
   await writable.close();
 };
 
 // Sauvegarde continue de la présentation sur un vrai fichier disque, une fois lié.
 // status: 'unsupported' | 'unlinked' | 'needs-permission' | 'linked' | 'saving' | 'error'
-// onOpenExisting(slides, logoUrl) est appelé quand un fichier ouvert contient déjà une
+// onOpenExisting(slides, logoUrl, theme) est appelé quand un fichier ouvert contient déjà une
 // présentation valide, pour la charger dans l'éditeur.
-export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
+export const useAutoSave = (slides, logoUrl, theme, enabled, onOpenExisting) => {
   const isSupported = typeof window !== 'undefined' && 'showOpenFilePicker' in window && 'showSaveFilePicker' in window;
   const [status, setStatus] = useState(isSupported ? 'unlinked' : 'unsupported');
   const [fileName, setFileName] = useState(null);
@@ -75,13 +75,13 @@ export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
         alert(`Ce fichier ne ressemble pas à une présentation SlidesFast, il n'a pas été modifié :\n\n${result.errors.join('\n')}`);
         return;
       }
-      onOpenExisting?.(result.slides, result.logoUrl);
+      onOpenExisting?.(result.slides, result.logoUrl, result.theme);
     } else {
-      await writeDocumentToHandle(handle, slides, logoUrl);
+      await writeDocumentToHandle(handle, slides, logoUrl, theme);
     }
 
     await linkHandle(handle);
-  }, [slides, logoUrl, onOpenExisting, linkHandle]);
+  }, [slides, logoUrl, theme, onOpenExisting, linkHandle]);
 
   // Créer un NOUVEAU fichier et y démarrer l'auto-save avec le contenu actuel de l'éditeur.
   const createNew = useCallback(async () => {
@@ -95,9 +95,9 @@ export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
       if (err.name !== 'AbortError') console.error("Sélection du fichier impossible :", err);
       return;
     }
-    await writeDocumentToHandle(handle, slides, logoUrl);
+    await writeDocumentToHandle(handle, slides, logoUrl, theme);
     await linkHandle(handle);
-  }, [slides, logoUrl, linkHandle]);
+  }, [slides, logoUrl, theme, linkHandle]);
 
   // Le navigateur exige un geste utilisateur pour redemander la permission après un rechargement.
   const grantPermission = useCallback(async () => {
@@ -119,7 +119,7 @@ export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
     const timer = setTimeout(async () => {
       try {
         setStatus('saving');
-        await writeDocumentToHandle(handleRef.current, slides, logoUrl);
+        await writeDocumentToHandle(handleRef.current, slides, logoUrl, theme);
         setStatus('linked');
       } catch (err) {
         console.error("Échec de l'auto-save :", err);
@@ -128,7 +128,7 @@ export const useAutoSave = (slides, logoUrl, enabled, onOpenExisting) => {
     }, WRITE_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slides, logoUrl, enabled]);
+  }, [slides, logoUrl, theme, enabled]);
 
   return { isSupported, status, fileName, openExisting, createNew, grantPermission, unlink };
 };

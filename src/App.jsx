@@ -5,29 +5,33 @@ import { Presentation } from './components/Presentation';
 import { PresenterMode } from './components/PresenterMode';
 import { OptionsMenu } from './components/OptionsMenu';
 import { SlideSorter } from './components/SlideSorter';
-import { useSlideStore } from './store/useSlideStore';
+import { useSlideStore, DEFAULT_THEME } from './store/useSlideStore';
 import { presentationPresets } from './data/presentationPresets';
 import { validateImportedSlides } from './utils/validateImport';
 import { useAutoSave } from './hooks/useAutoSave';
+import { useAccentTheme } from './hooks/useAccentTheme';
 
 function App({ isDisplayMode }) {
-  const { slides, activeSlideId, logoUrl, setSlides, setActiveSlideId, setLogoUrl, undo, redo, past, future } = useSlideStore();
+  const { slides, activeSlideId, logoUrl, theme, setSlides, setActiveSlideId, setLogoUrl, setTheme, undo, redo, past, future } = useSlideStore();
 
   const [mode, setMode] = useState(() => {
     if (isDisplayMode) return 'display';
     return slides && slides.length > 0 ? 'editor' : 'home';
   });
 
+  useAccentTheme(theme);
+
   // Remplace tout le document par un autre (preset, import, ouverture via auto-save) :
   // setSlides seul ne suffit pas, activeSlideId pointerait vers un id qui n'existe plus
   // dans les nouvelles slides (elles ont toutes de nouveaux id), et l'éditeur semblerait vide.
-  const loadNewDocument = useCallback((newSlides, newLogoUrl = '') => {
+  const loadNewDocument = useCallback((newSlides, newLogoUrl = '', newTheme = DEFAULT_THEME) => {
     setSlides(newSlides);
     setActiveSlideId(newSlides[0]?.id ?? null);
     setLogoUrl(newLogoUrl);
-  }, [setSlides, setActiveSlideId, setLogoUrl]);
+    setTheme(newTheme);
+  }, [setSlides, setActiveSlideId, setLogoUrl, setTheme]);
 
-  const autoSave = useAutoSave(slides, logoUrl, mode === 'editor', loadNewDocument);
+  const autoSave = useAutoSave(slides, logoUrl, theme, mode === 'editor', loadNewDocument);
 
   // Protection contre la fermeture accidentelle de l'onglet/rafraîchissement global
   useEffect(() => {
@@ -109,7 +113,7 @@ function App({ isDisplayMode }) {
   };
 
   const handleSave = useCallback(async () => {
-    const data = JSON.stringify({ slides, logoUrl }, null, 2);
+    const data = JSON.stringify({ slides, logoUrl, theme }, null, 2);
     try {
       const handle = await window.showSaveFilePicker({
         suggestedName: 'SlidesFast.json',
@@ -131,7 +135,7 @@ function App({ isDisplayMode }) {
       }
       return false; // Annulé par l'utilisateur
     }
-  }, [slides, logoUrl]);
+  }, [slides, logoUrl, theme]);
 
   // Raccourci clavier Ctrl/Cmd+S : sauvegarde locale au lieu de la boîte "Enregistrer la page" du navigateur
   useEffect(() => {
@@ -184,7 +188,7 @@ function App({ isDisplayMode }) {
       // Idem : on détache l'auto-save avant de charger ce nouveau document, pour ne pas
       // écraser l'ancien fichier lié avec le contenu qu'on vient d'importer.
       await autoSave.unlink();
-      loadNewDocument(result.slides, result.logoUrl);
+      loadNewDocument(result.slides, result.logoUrl, result.theme);
       setMode('editor');
     };
     reader.readAsText(file);
@@ -329,7 +333,7 @@ function App({ isDisplayMode }) {
               Import
               <input type="file" className="hidden" accept=".json" onChange={handleImport} />
             </label>
-            <OptionsMenu slides={slides} logoUrl={logoUrl} onLogoChange={setLogoUrl} />
+            <OptionsMenu slides={slides} logoUrl={logoUrl} onLogoChange={setLogoUrl} theme={theme} onThemeChange={setTheme} />
 
             {autoSave.isSupported && (
               <>

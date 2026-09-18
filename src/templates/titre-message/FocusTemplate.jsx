@@ -8,7 +8,7 @@ export const FocusVisual = ({ content }) => {
       {/* Côté gauche : Zone visuelle forte. Avec une image, elle remplit tout le panneau
           (object-cover : rognée si besoin, jamais étirée) ; sans image, l'icône emoji reste
           affichée comme avant. */}
-      <div className="w-1/3 bg-blue-600 flex items-center justify-center p-8 relative overflow-hidden">
+      <div className="w-1/3 bg-[var(--accent-primary)] flex items-center justify-center p-8 relative overflow-hidden">
         {content?.imageUrl ? (
           <img src={content.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
         ) : (
@@ -18,10 +18,10 @@ export const FocusVisual = ({ content }) => {
 
       {/* Côté droit : Contenu textuel */}
       <div className="w-2/3 p-12 flex flex-col justify-center bg-gradient-to-r from-slate-950 to-slate-900">
-        <h2 className="text-4xl font-extrabold text-white mb-6 leading-tight">
+        <h2 className="text-4xl font-extrabold text-[var(--accent-title)] mb-6 leading-tight">
           {content?.titre || 'Le sujet principal'}
         </h2>
-        <p className="text-slate-300 text-lg leading-relaxed border-l-4 border-blue-600 pl-6">
+        <p className="text-slate-300 text-lg leading-relaxed border-l-4 border-[var(--accent-primary)] pl-6">
           {content?.desc || 'Présentez ici l\'idée maîtresse de votre présentation. Ce template est conçu pour isoler une information cruciale et la rendre inoubliable.'}
         </p>
       </div>
