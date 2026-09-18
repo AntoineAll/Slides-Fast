@@ -18,7 +18,7 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 - **Réorganisation des slides** par glisser-déposer, **duplication** en un clic (menu "⋯" au survol) et suppression, dans la barre latérale comme dans la vue d'ensemble.
 - **Navigation clavier** entre les slides (flèches) depuis l'éditeur, formulaire comme aperçu visuel.
 - **Annuler / Rétablir** (`Ctrl+Z`, `Ctrl+Shift+Z` ou `Ctrl+Y`), avec regroupement des frappes rapprochées pour ne pas avoir à annuler lettre par lettre.
-- **Mode présentateur** : notes par slide, aperçu de la slide suivante, prise en charge d'un second écran dédié à l'affichage public.
+- **Mode présentateur** : notes par slide, aperçu de la slide suivante, minuteur (chrono ou compte à rebours, avec alerte visuelle en fin de temps), prise en charge d'un second écran dédié à l'affichage public.
 - **Mode présentation** : numéro de la slide en cours et logo de la présentation (optionnel), affichés discrètement en coin d'écran.
 - **Thème de couleur d'accent** : au choix, le thème par défaut (bleu/cyan) ou des couleurs principale, secondaire et de titre personnalisées, appliquées instantanément à tous les modèles (boutons, textes, halos décoratifs, titre de slide).
 - **Export PDF** de la présentation entière (une page par slide), en plus du format `.json` natif.
@@ -33,6 +33,7 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 - [Tailwind CSS 4](https://tailwindcss.com/) pour le style
 - [dnd-kit](https://dndkit.com/) pour le glisser-déposer des slides
 - [html2canvas-pro](https://github.com/yorickshan/html2canvas-pro) + [jsPDF](https://github.com/parallax/jsPDF) pour l'export PDF (fork de html2canvas compatible avec les couleurs `oklch()` de Tailwind 4), chargés à la demande pour ne pas alourdir le chargement initial
+- [Vitest](https://vitest.dev/) pour les tests unitaires
 
 ## Installation
 
