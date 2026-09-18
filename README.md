@@ -11,7 +11,7 @@ Un éditeur de présentations façon PowerPoint, en local, pensé pour être sim
 ## Fonctionnalités
 
 - **11 modèles de slides** prêts à l'emploi : Titre & Image, Titre & Texte, Diagramme Circulaire, Comparatif Pros/Cons, Timeline/Roadmap, 3 Piliers/Valeurs, Mise en avant (Spotlight), Données & KPIs, 2 Colonnes, Liste Verticale Segmentée, Bento Grid.
-- **Presets de démarrage** (pitch deck, point hebdo, page blanche...) pour ne pas partir de zéro.
+- **6 presets de démarrage** pré-remplis (pitch deck, point hebdo, bilan trimestriel, formation, proposition commerciale, page blanche), chacun avec plusieurs slides de contenu réaliste pour démarrer vite plutôt que de partir de zéro.
 - **Édition par formulaire** avec bascule vers un **aperçu visuel** zoomable. Le choix du modèle se fait via un menu déroulant classé par catégorie, ou visuellement dans une grille où chaque modèle s'affiche avec son vrai rendu et un contenu d'exemple.
 - **Vue d'ensemble** ("slide sorter") : toutes les slides en miniature dans une grille, réorganisables par glisser-déposer, ouvrables en double-clic.
 - **Images locales** : import direct depuis le disque (redimensionnées automatiquement si trop grandes, sans jamais déformer les proportions ni recompresser inutilement) ou via une URL externe — sur les modèles Titre & Image (avec légende optionnelle), Mise en avant (Spotlight) et Bento Grid.
